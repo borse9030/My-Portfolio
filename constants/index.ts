@@ -92,19 +92,15 @@ export const SOCIALS = [
   {
     name: "Instagram",
     icon: RxInstagramLogo,
-    link: "https://instagram.com",
+    link: "https://www.instagram.com/bhavesh_.5464?igsh=dGttbmF2bDJjbWVh",
   },
   {
     name: "Facebook",
     icon: FaFacebook,
     link: "https://facebook.com",
   },
-  {
-    name: "Twitter",
-    icon: RxTwitterLogo,
-    link: "https://twitter.com",
-  },
 ] as const;
+
 
 export const FRONTEND_SKILL = [
   {
@@ -286,19 +282,9 @@ export const FOOTER_DATA = [
     title: "Community",
     data: [
       {
-        name: "YouTube",
-        icon: FaYoutube,
-        link: "https://youtube.com",
-      },
-      {
         name: "GitHub",
         icon: RxGithubLogo,
-        link: "https://github.com",
-      },
-      {
-        name: "Discord",
-        icon: RxDiscordLogo,
-        link: "https://discord.com",
+        link: "https://github.com/borse9030",
       },
     ],
   },
@@ -308,33 +294,13 @@ export const FOOTER_DATA = [
       {
         name: "Instagram",
         icon: RxInstagramLogo,
-        link: "https://instagram.com",
-      },
-      {
-        name: "Twitter",
-        icon: RxTwitterLogo,
-        link: "https://twitter.com",
-      },
-      {
-        name: "Linkedin",
-        icon: RxLinkedinLogo,
-        link: "https://linkedin.com",
+        link: "https://www.instagram.com/bhavesh_.5464?igsh=dGttbmF2bDJjbWVh",
       },
     ],
   },
   {
     title: "About",
     data: [
-      {
-        name: "Become Sponsor",
-        icon: null,
-        link: "https://youtube.com",
-      },
-      {
-        name: "Learning about me",
-        icon: null,
-        link: "https://example.com",
-      },
       {
         name: "Contact Me",
         icon: null,
