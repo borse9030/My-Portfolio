@@ -304,7 +304,7 @@ export const FOOTER_DATA = [
       {
         name: "Contact Me",
         icon: null,
-        link: "mailto:contact@example.com",
+        link: "mailto:borsebhavesh689@gmail.com",
       },
     ],
   },

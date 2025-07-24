@@ -1,30 +1,10 @@
-title: "About",
-    data: [
-      {
-        name: "Become Sponsor",
-        icon: null,
-        link: "https://youtube.com",
-      },
-      {
-        name: "Learning about me",
-        icon: null,
-        link: "https://example.com",
-      },
-      {
-        name: "Contact Me",
+name: "Contact Me",
         icon: null,
         link: "mailto:contact@example.com",
       },
-    ],
-  },
 =======
-  {
-    title: "About",
-    data: [
       {
         name: "Contact Me",
         icon: null,
-        link: "mailto:contact@example.com",
+        link: "mailto:borsebhavesh689@gmail.com",
       },
-    ],
-  },
