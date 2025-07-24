@@ -94,11 +94,6 @@ export const SOCIALS = [
     icon: RxInstagramLogo,
     link: "https://www.instagram.com/bhavesh_.5464?igsh=dGttbmF2bDJjbWVh",
   },
-  {
-    name: "Facebook",
-    icon: FaFacebook,
-    link: "https://facebook.com",
-  },
 ] as const;
 
 
