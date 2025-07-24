@@ -51,9 +51,10 @@ export const HeroContent = () => {
 
         <motion.a
           variants={slideInFromLeft(1)}
+          href="#skills"
           className="py-2 button-primary text-center text-white cursor-pointer rounded-lg max-w-[200px]"
         >
-          Learn more
+          Skills
         </motion.a>
       </div>
 
