@@ -2,31 +2,22 @@
  * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
  *
  * Core Philosophy:
- * This ruleset provides public read access to portfolio data (projects, skills, contact info, about me)
- * while restricting write access to the website owner. Contact form messages can be created by anyone
- * but are only readable by the owner.  No user-specific data is stored, so ownership is not a factor
- * except for write operations on the core portfolio data.
+ * This ruleset provides public read access to portfolio content (projects, skills, about me, contact info)
+ * while restricting write access to the website owner.  Contact form submissions ("messages")
+ * are publicly writeable (create only) but not readable except by the owner (future admin).
  *
  * Data Structure:
- * - /projects/{projectId}: Stores project details.
- * - /skills/{skillId}: Stores skill information.
+ * - /projects/{projectId}: Stores individual project details.
+ * - /skills/{skillId}: Stores individual skill details.
  * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores the 'About Me' section content.
- * - /messages/{messageId}: Stores messages submitted through the contact form.
+ * - /aboutMe/{aboutMeId}: Stores "About Me" section content.
+ * - /messages/{messageId}: Stores contact form submissions.
  *
  * Key Security Decisions:
- * - Public read access for all portfolio data (projects, skills, contact info, about me).
- * - Only the owner (defined externally as an admin) can create, update, or delete portfolio data.
- * - Anyone can submit contact form messages (create), but only the owner can read them (get, list).
- * - No user listing is allowed.
- *
- * Denormalization for Authorization:
- *  - There's no explicit owner ID on the documents themselves. Authorization relies on an external
- *    mechanism (e.g., a check in the backend functions) to determine if the user is an admin/owner.
- *
- * Structural Segregation:
- *  - Public portfolio data and private contact form messages are stored in separate collections to
- *    simplify access control.
+ * - Public read access is granted to projects, skills, contact info, and about me sections.
+ * - Only authenticated users can submit contact form messages.
+ * - Listing messages is denied to all users, based on the provided error report and the
+ *   reasoning in `backend.json`.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -36,79 +27,86 @@ service cloud.firestore {
      * @description Grants public read access to projects and restricts write access.
      * @path /projects/{projectId}
      * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
      * @description Grants public read access to skills and restricts write access.
      * @path /skills/{skillId}
      * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
      * @description Grants public read access to contact info and restricts write access.
      * @path /contactInfo/{contactInfoId}
      * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Grants public read access to about me and restricts write access.
+     * @description Grants public read access to about me section and restricts write access.
      * @path /aboutMe/{aboutMeId}
      * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Allows anyone to create messages, but only the owner can read them.
+     * @description Allows any authenticated user to create a message, but restricts reading.
      * @path /messages/{messageId}
+     * @allow get: if false;
+     * @allow list: if false;
      * @allow create: if isSignedIn();
-     * @allow get, list: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public creation, owner-only reads.
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public write (create only), no read access (except future admin).
      */
     match /messages/{messageId} {
+      allow get: if false;
+      allow list: if false;
       allow create: if isSignedIn();
-      allow get, list: if false; // TODO: Add owner validation once admin roles are implemented.
       allow update: if false;
       allow delete: if false;
     }
   }
 
+  // Helper function to determine if a user is signed in.
   function isSignedIn() {
     return request.auth != null;
   }
