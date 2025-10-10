@@ -3,93 +3,111 @@
  *
  * Core Philosophy:
  * This ruleset provides public read access to portfolio content (projects, skills, about me, contact info)
- * while restricting write access to authenticated users or in some cases no access at all, to prevent unauthorized modifications.
- * Messages from the contact form can be created by anyone.
+ * while restricting write access to the website owner.  Contact form submissions ("messages")
+ * are publicly writeable (create only) but not readable except by the owner (future admin).
  *
  * Data Structure:
  * - /projects/{projectId}: Stores individual project details.
  * - /skills/{skillId}: Stores individual skill details.
  * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores "About Me" content.
- * - /messages/{messageId}: Stores messages submitted via the contact form.
+ * - /aboutMe/{aboutMeId}: Stores "About Me" section content.
+ * - /messages/{messageId}: Stores contact form submissions.
  *
  * Key Security Decisions:
- * - Public read access for all portfolio content collections (projects, skills, contactInfo, aboutMe).
- * - Authenticated write access for portfolio content collections (projects, skills, contactInfo, aboutMe).
- * - Public write access (create only) for the 'messages' collection.
- * - No listing of documents in the messages collection.
+ * - Public read access is granted to projects, skills, contact info, and about me sections.
+ * - Only authenticated users can submit contact form messages.
+ * - Listing messages is denied to all users, based on the provided error report and the
+ *   reasoning in `backend.json`.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows public read access to project data. Only authenticated users can create, update, or delete projects.
+     * @description Grants public read access to projects and restricts write access.
      * @path /projects/{projectId}
-     * @allow (get, list): Any user can read project data.
-     * @allow (create, update, delete): Only authenticated users can modify project data.
-     * @deny (create, update, delete): Unauthenticated users cannot modify project data.
-     * @principle Public read, authenticated write for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Allows public read access to skill data. Only authenticated users can create, update, or delete skills.
+     * @description Grants public read access to skills and restricts write access.
      * @path /skills/{skillId}
-     * @allow (get, list): Any user can read skill data.
-     * @allow (create, update, delete): Only authenticated users can modify skill data.
-     * @deny (create, update, delete): Unauthenticated users cannot modify skill data.
-     * @principle Public read, authenticated write for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Allows public read access to contact information. Only authenticated users can create, update, or delete contact information.
+     * @description Grants public read access to contact info and restricts write access.
      * @path /contactInfo/{contactInfoId}
-     * @allow (get, list): Any user can read contact information.
-     * @allow (create, update, delete): Only authenticated users can modify contact information.
-     * @deny (create, update, delete): Unauthenticated users cannot modify contact information.
-     * @principle Public read, authenticated write for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Allows public read access to "About Me" data. Only authenticated users can create, update, or delete "About Me" content.
+     * @description Grants public read access to about me section and restricts write access.
      * @path /aboutMe/{aboutMeId}
-     * @allow (get, list): Any user can read "About Me" data.
-     * @allow (create, update, delete): Only authenticated users can modify "About Me" data.
-     * @deny (create, update, delete): Unauthenticated users cannot modify "About Me" data.
-     * @principle Public read, authenticated write for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Allows anyone to create messages.  Reading and other operations are denied.
+     * @description Allows any authenticated user to create a message, but restricts reading.
      * @path /messages/{messageId}
-     * @allow (create): Any user can create a message.
-     * @deny (get, list, update, delete): No user can read, list, update, or delete messages.
-     * @principle Public writes, owner-only reads (future admin role).
+     * @allow get: if false;
+     * @allow list: if false;
+     * @allow create: if isSignedIn();
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @principle Public write (create only), no read access (except future admin).
      */
     match /messages/{messageId} {
-      allow get, list: if false;
-      allow create: if true;
-      allow update, delete: if false;
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
     }
+  }
 
-    function isSignedIn() {
-      return request.auth != null;
-    }
+  // Helper function to determine if a user is signed in.
+  function isSignedIn() {
+    return request.auth != null;
   }
 }
