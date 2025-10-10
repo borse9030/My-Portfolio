@@ -1,0 +1,81 @@
+/**
+ * @fileOverview Firestore Security Rules for Bhavesh's portfolio.
+ *
+ * Core Philosophy:
+ * This ruleset provides public read access to all data (projects, skills, contact info, about me)
+ * to allow anyone to view the portfolio.  Write access is denied to everyone, simulating
+ * a read-only database for the portfolio's data in this prototyping phase. In a production
+ * environment, write access would be restricted to the portfolio owner (Bhavesh).
+ *
+ * Data Structure:
+ * - /projects/{projectId}: Stores individual project details.
+ * - /skills/{skillId}: Stores individual skill details.
+ * - /contactInfo/{contactInfoId}: Stores contact information.
+ * - /aboutMe/{aboutMeId}: Stores the 'About Me' content.
+ *
+ * Key Security Decisions:
+ * - Public read access for all collections.
+ * - No write access for anyone (simulating a read-only setup).
+ * - No user listing is possible.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Allows anyone to read project data.  Write access is denied.
+     * @path /projects/{projectId}
+     * @allow (get, list) - Any user can read project data.
+     * @deny (create, update, delete) - No one can modify project data.
+     * @principle Allows public read access while restricting write access.
+     */
+    match /projects/{projectId} {
+      allow get, list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Allows anyone to read skill data. Write access is denied.
+     * @path /skills/{skillId}
+     * @allow (get, list) - Any user can read skill data.
+     * @deny (create, update, delete) - No one can modify skill data.
+     * @principle Allows public read access while restricting write access.
+     */
+    match /skills/{skillId} {
+      allow get, list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Allows anyone to read contact information. Write access is denied.
+     * @path /contactInfo/{contactInfoId}
+     * @allow (get, list) - Any user can read contact information.
+     * @deny (create, update, delete) - No one can modify contact information.
+     * @principle Allows public read access while restricting write access.
+     */
+    match /contactInfo/{contactInfoId} {
+      allow get, list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Allows anyone to read the 'About Me' section. Write access is denied.
+     * @path /aboutMe/{aboutMeId}
+     * @allow (get, list) - Any user can read the 'About Me' section.
+     * @deny (create, update, delete) - No one can modify the 'About Me' section.
+     * @principle Allows public read access while restricting write access.
+     */
+    match /aboutMe/{aboutMeId} {
+      allow get, list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

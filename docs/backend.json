@@ -1,0 +1,220 @@
+{
+  "entities": {
+    "Project": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Project",
+      "type": "object",
+      "description": "Represents a project in Bhavesh's portfolio.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Project entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the project."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the project."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image representing the project.",
+          "format": "uri"
+        },
+        "liveDemoUrl": {
+          "type": "string",
+          "description": "URL of the live demo of the project.",
+          "format": "uri"
+        },
+        "repositoryUrl": {
+          "type": "string",
+          "description": "URL of the project's code repository.",
+          "format": "uri"
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The display order of the project in the portfolio."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "imageUrl",
+        "displayOrder"
+      ]
+    },
+    "Skill": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Skill",
+      "type": "object",
+      "description": "Represents a skill in Bhavesh's skillset.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Skill entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the skill (e.g., React, Python)."
+        },
+        "proficiency": {
+          "type": "number",
+          "description": "A numerical value representing the proficiency level in the skill (e.g., 0-100)."
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The display order of the skill in the portfolio."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "proficiency",
+        "displayOrder"
+      ]
+    },
+    "ContactInfo": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContactInfo",
+      "type": "object",
+      "description": "Represents Bhavesh's contact information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Contact Info entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Bhavesh's email address.",
+          "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Bhavesh's phone number."
+        },
+        "linkedInUrl": {
+          "type": "string",
+          "description": "URL to Bhavesh's LinkedIn profile.",
+          "format": "uri"
+        },
+        "githubUrl": {
+          "type": "string",
+          "description": "URL to Bhavesh's GitHub profile.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "email"
+      ]
+    },
+    "AboutMe": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AboutMe",
+      "type": "object",
+      "description": "Represents the 'About Me' section of Bhavesh's portfolio.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the About Me entity."
+        },
+        "bio": {
+          "type": "string",
+          "description": "A detailed biography of Bhavesh."
+        },
+        "profilePictureUrl": {
+          "type": "string",
+          "description": "URL to Bhavesh's profile picture.",
+          "format": "uri"
+        },
+        "resumeUrl": {
+          "type": "string",
+          "description": "URL to Bhavesh's resume (PDF).",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "bio"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/projects/{projectId}",
+        "definition": {
+          "entityName": "Project",
+          "schema": {
+            "$ref": "#/backend/entities/Project"
+          },
+          "description": "Stores project details for Bhavesh's portfolio.",
+          "params": [
+            {
+              "name": "projectId",
+              "description": "The unique identifier for each project."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/skills/{skillId}",
+        "definition": {
+          "entityName": "Skill",
+          "schema": {
+            "$ref": "#/backend/entities/Skill"
+          },
+          "description": "Stores skill information for Bhavesh's portfolio.",
+          "params": [
+            {
+              "name": "skillId",
+              "description": "The unique identifier for each skill."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/contactInfo/{contactInfoId}",
+        "definition": {
+          "entityName": "ContactInfo",
+          "schema": {
+            "$ref": "#/backend/entities/ContactInfo"
+          },
+          "description": "Stores Bhavesh's contact information.",
+          "params": [
+            {
+              "name": "contactInfoId",
+              "description": "The unique identifier for contact information."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/aboutMe/{aboutMeId}",
+        "definition": {
+          "entityName": "AboutMe",
+          "schema": {
+            "$ref": "#/backend/entities/AboutMe"
+          },
+          "description": "Stores the 'About Me' section content.",
+          "params": [
+            {
+              "name": "aboutMeId",
+              "description": "The unique identifier for the 'About Me' section."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to store data for Bhavesh's portfolio website. It includes collections for projects, skills, contact information, and the 'About Me' section. Each collection stores documents representing individual entities. The structure prioritizes simplicity and ease of querying, suitable for a portfolio application where data is primarily read-only or updated infrequently by Bhavesh. No complex authorization is needed since only the website owner (Bhavesh) needs write access. This design leverages structural segregation, placing each entity type in its own collection, simplifying rules. Since the entities are managed by a single user, no denormalization is needed for authorization independence. QAPs are supported because each entity has its own dedicated collection."
+  }
+}
