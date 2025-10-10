@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-profile",
+      "description": "Profile picture of Bhavesh for the hero section.",
+      "imageUrl": "https://picsum.photos/seed/bhavesh-hero/400/400",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "about-profile",
+      "description": "Profile picture of Bhavesh for the about section.",
+      "imageUrl": "https://picsum.photos/seed/bhavesh-about/400/500",
+      "imageHint": "person working"
+    },
+    {
+      "id": "project-1",
+      "description": "Screenshot of Project One.",
+      "imageUrl": "https://picsum.photos/seed/project1/500/300",
+      "imageHint": "website screenshot"
+    },
+    {
+      "id": "project-2",
+      "description": "Screenshot of Project Two.",
+      "imageUrl": "https://picsum.photos/seed/project2/500/300",
+      "imageHint": "dashboard ui"
+    },
+    {
+      "id": "project-3",
+      "description": "Screenshot of Project Three.",
+      "imageUrl": "https://picsum.photos/seed/project3/500/300",
+      "imageHint": "mobile app"
+    },
+    {
+      "id": "project-4",
+      "description": "Screenshot of Project Four.",
+      "imageUrl": "https://picsum.photos/seed/project4/500/300",
+      "imageHint": "ecommerce website"
+    }
+  ]
 }
