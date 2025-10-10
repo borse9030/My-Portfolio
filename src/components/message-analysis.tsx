@@ -3,7 +3,7 @@
 import { useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useCollection, useFirestore, useMemoFirebase, useAuth, useUser } from '@/firebase';
-import { collection, orderBy, query, where } from 'firebase/firestore';
+import { collection, orderBy, query } from 'firebase/firestore';
 import { WithId } from '@/firebase/firestore/use-collection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { signInAnonymously } from 'firebase/auth';
@@ -12,7 +12,6 @@ interface Message {
   name: string;
   email: string;
   message: string;
-  userId: string;
   createdAt: {
     seconds: number;
     nanoseconds: number;
@@ -55,9 +54,9 @@ export default function MessageAnalysis() {
 
   const messagesQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
+    // Query the user's specific messages sub-collection
     return query(
-      collection(firestore, 'messages'),
-      where('userId', '==', user.uid),
+      collection(firestore, 'users', user.uid, 'messages'),
       orderBy('createdAt', 'desc')
     );
   }, [firestore, user]);

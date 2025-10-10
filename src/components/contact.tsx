@@ -49,10 +49,10 @@ export default function Contact() {
       return;
     }
 
-    const messagesCollection = collection(firestore, 'messages');
+    // Path to the user's specific messages sub-collection
+    const messagesCollection = collection(firestore, 'users', user.uid, 'messages');
     addDocumentNonBlocking(messagesCollection, {
       ...values,
-      userId: user.uid, // Add the user's ID to the message
       createdAt: serverTimestamp(),
     });
 
