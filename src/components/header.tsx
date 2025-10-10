@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Linkedin, Code } from 'lucide-react';
+import SafeClient from '@/components/safe-client';
 
 const navLinks = [
   { href: '#about', label: 'ABOUT' },
@@ -55,7 +56,9 @@ export default function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="flex items-center gap-2 text-2xl font-bold font-headline text-black">
           <div className="w-8 h-8 p-1.5 bg-black text-white rounded-full flex items-center justify-center">
-            <LogoIcon />
+            <SafeClient>
+              <LogoIcon />
+            </SafeClient>
           </div>
           <span>PORTFOLIO</span>
         </Link>
