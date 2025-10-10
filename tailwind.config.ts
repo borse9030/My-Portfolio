@@ -18,8 +18,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
-        headline: ['Space Grotesk', 'sans-serif'],
-        code: ['monospace'],
+        headline: ['Anton', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -95,6 +94,10 @@ export default {
             height: '0',
           },
         },
+        typing: {
+          'from': { width: '0' },
+          'to': { width: '100%' }
+        },
         'pulse-slow': {
           '50%': {
             opacity: '.5',
@@ -106,6 +109,7 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'pulse-slow': 'pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        typing: 'typing 2s steps(10, end), blink .75s step-end infinite',
       },
     },
   },

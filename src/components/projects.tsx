@@ -15,14 +15,14 @@ export default function Projects() {
   const projectImages = PlaceHolderImages.filter(p => p.id.startsWith('project-'));
 
   return (
-    <section id="projects" className="bg-secondary py-16 md:py-24">
+    <section id="projects" className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">My Projects</h2>
         <div className="grid sm:grid-cols-2 gap-8">
           {projects.map((project, index) => {
             const image = projectImages.find(img => img.id === project.id);
             return (
-              <Card key={project.id} className="group overflow-hidden shadow-2xl">
+              <Card key={project.id} className="group overflow-hidden shadow-2xl rounded-none">
                 <CardContent className="p-0">
                   <div className="relative">
                     {image && (

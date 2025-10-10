@@ -21,15 +21,15 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-16 md:py-24">
+    <section id="services" className="bg-white/30 backdrop-blur-sm py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">My Services</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="text-center bg-card hover:bg-accent/50 transition-all duration-300 transform hover:-translate-y-2 shadow-lg">
+            <Card key={index} className="text-center bg-card hover:bg-accent/50 transition-all duration-300 transform hover:-translate-y-2 shadow-lg rounded-none">
               <CardHeader className="items-center p-6">
                 <div className="bg-primary/20 p-4 rounded-full mb-4">
-                  <service.icon className="w-8 h-8 text-primary-foreground" />
+                  <service.icon className="w-8 h-8 text-primary" />
                 </div>
                 <CardTitle className="font-headline text-2xl">{service.title}</CardTitle>
               </CardHeader>

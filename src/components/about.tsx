@@ -22,13 +22,13 @@ export default function About() {
   const aboutImage = PlaceHolderImages.find(p => p.id === 'about-profile');
 
   return (
-    <section id="about" className="bg-secondary py-16 md:py-24">
+    <section id="about" className="bg-white/30 backdrop-blur-sm py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">About Me</h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="relative flex justify-center">
             {aboutImage && (
-              <Card className="overflow-hidden shadow-2xl">
+              <Card className="overflow-hidden shadow-2xl rounded-none">
                 <Image
                   src={aboutImage.imageUrl}
                   alt={aboutImage.description}
@@ -53,13 +53,13 @@ export default function About() {
               <TabsContent value="skills" className="mt-6">
                 <div className="flex flex-wrap gap-3">
                   {skills.map(skill => (
-                    <div key={skill} className="bg-background px-4 py-2 rounded-md text-sm font-medium shadow-sm">{skill}</div>
+                    <div key={skill} className="bg-background px-4 py-2 rounded-none text-sm font-medium shadow-sm">{skill}</div>
                   ))}
                 </div>
               </TabsContent>
               <TabsContent value="experience" className="mt-6 space-y-4">
                 {experience.map(exp => (
-                  <Card key={exp.company}>
+                  <Card key={exp.company} className="rounded-none">
                     <CardContent className="p-4">
                       <h3 className="font-bold text-lg">{exp.role}</h3>
                       <p className="text-muted-foreground">{exp.company} | {exp.duration}</p>
@@ -69,7 +69,7 @@ export default function About() {
               </TabsContent>
               <TabsContent value="education" className="mt-6 space-y-4">
                 {education.map(edu => (
-                  <Card key={edu.university}>
+                  <Card key={edu.university} className="rounded-none">
                     <CardContent className="p-4">
                       <h3 className="font-bold text-lg">{edu.degree}</h3>
                       <p className="text-muted-foreground">{edu.university} | {edu.duration}</p>

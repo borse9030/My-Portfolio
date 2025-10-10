@@ -18,7 +18,7 @@ const formSchema = z.object({
 });
 
 const contactInfo = [
-    { icon: Mail, text: "bhavesh@example.com", href: "mailto:bhavesh@example.com" },
+    { icon: Mail, text: "sopanpatil@example.com", href: "mailto:sopanpatil@example.com" },
     { icon: Phone, text: "+1 (123) 456-7890", href: "tel:+11234567890" },
     { icon: MapPin, text: "Mumbai, India", href: "#" },
 ];
@@ -44,7 +44,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="py-16 md:py-24">
+    <section id="contact" className="py-16 md:py-24 bg-white/30 backdrop-blur-sm">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Contact Me</h2>
         <div className="grid md:grid-cols-2 gap-12">
@@ -53,7 +53,7 @@ export default function Contact() {
              <p className="text-muted-foreground">I'm currently available for freelance work and open to new opportunities. Feel free to reach out to me.</p>
              <div className="space-y-4">
                 {contactInfo.map((info, index) => (
-                    <a key={index} href={info.href} className="flex items-center gap-4 text-muted-foreground hover:text-primary-foreground transition-colors">
+                    <a key={index} href={info.href} className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                         <info.icon className="w-6 h-6 text-primary" />
                         <span>{info.text}</span>
                     </a>
@@ -61,7 +61,7 @@ export default function Contact() {
              </div>
           </div>
           <div>
-            <Card className="p-6 md:p-8 bg-card">
+            <Card className="p-6 md:p-8 bg-card rounded-none">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
