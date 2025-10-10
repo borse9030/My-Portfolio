@@ -41,7 +41,7 @@ export default function Hero() {
         <div className="relative flex justify-center items-center">
           {heroImage && (
             <div className="relative w-[400px] h-[400px]">
-              <div className="absolute inset-0 bg-red-600 rounded-full" />
+              <div className="absolute inset-0 bg-primary rounded-full" />
               <Image
                 src={heroImage.imageUrl}
                 alt={heroImage.description}
