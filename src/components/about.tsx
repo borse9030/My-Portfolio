@@ -6,7 +6,7 @@ export default function About() {
           <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-8">
             ABOUT ME
           </h2>
-          <p className="text-center text-base md:text-lg text-foreground/80 font-bold uppercase tracking-wider leading-relaxed">
+          <p className="text-center text-sm md:text-lg text-foreground/80 font-bold uppercase tracking-wider leading-relaxed">
             I AM A PASSIONATE AND DRIVEN COMPUTER SCIENCE STUDENT WITH A DEEP
             SPECIALIZATION IN ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING. MY
             JOURNEY INTO TECH IS FUELED BY A RELENTLESS CURIOSITY FOR BUILDING

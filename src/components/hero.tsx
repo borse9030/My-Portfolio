@@ -28,7 +28,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200 overflow-hidden">
+    <section id="home" className="relative min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200 overflow-hidden pt-20">
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -76,19 +76,19 @@ export default function Hero() {
         className="absolute top-0 left-0 w-full h-full z-0"
       />
 
-      <div className="relative z-10 max-w-6xl w-full flex flex-col md:flex-row items-center justify-between gap-10 px-6">
+      <div className="relative z-10 max-w-6xl w-full flex flex-col-reverse md:flex-row items-center justify-center md:justify-between gap-10 px-6">
         {/* LEFT SIDE - Animated Text */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="flex flex-col items-start text-left md:w-1/2 space-y-5"
+          className="flex flex-col items-center md:items-start text-center md:text-left md:w-1/2 space-y-5"
         >
           <motion.h1
             initial={{ opacity: 0, y: 80 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-            className="text-5xl md:text-6xl font-headline font-black leading-tight text-black"
+            className="text-4xl sm:text-5xl md:text-6xl font-headline font-black leading-tight text-black"
           >
             HI, I'M BHAVESH
             <br />
@@ -106,7 +106,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="text-lg md:text-xl text-black/80 font-bold leading-relaxed"
+            className="text-base md:text-xl text-black/80 font-bold leading-relaxed max-w-lg"
           >
             I'M A COMPUTER SCIENCE AND AI/ML STUDENT PASSIONATE ABOUT BUILDING
             INNOVATIVE SOLUTIONS THAT MAKE A DIFFERENCE. EXPLORE MY WORK AND GET
@@ -150,13 +150,13 @@ export default function Hero() {
           transition={{ delay: 0.5, duration: 1.2, ease: "easeOut" }}
           className="md:w-1/2 flex justify-center"
         >
-          <div className="rounded-full border-8 border-pink-300 shadow-lg p-2">
+          <div className="rounded-full border-8 border-pink-300 shadow-lg p-2 w-56 h-56 sm:w-72 sm:h-72">
             <Image
               src="/IMG_20250902_175543_746.webp"
               alt="Profile picture of Bhavesh for the hero section."
               width={288}
               height={288}
-              className="rounded-full object-cover shadow-lg w-72 h-72"
+              className="rounded-full object-cover w-full h-full shadow-lg"
               priority
               data-ai-hint="man portrait"
             />

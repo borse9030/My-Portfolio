@@ -69,6 +69,14 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isMenuOpen]);
 
   return (
     <header className='fixed top-0 w-full z-50 flex justify-center'>
@@ -91,19 +99,19 @@ export default function Header() {
       </div>
       
       {isMenuOpen && (
-        <div className="md:hidden bg-white/90 backdrop-blur-lg w-full mt-20 shadow-xl animate-slide-down-fast">
-          <nav className="flex flex-col items-center space-y-4 py-6">
+        <div className="md:hidden bg-white/95 backdrop-blur-lg w-full h-screen mt-20 shadow-xl animate-slide-down-fast overflow-y-auto">
+          <nav className="flex flex-col items-center space-y-6 py-8">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-lg font-medium text-black/80 hover:text-black transition-colors">
+              <Link key={link.href} href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-xl font-medium text-black/80 hover:text-black transition-colors">
                   {link.label}
               </Link>
             ))}
-             <div className="flex items-center gap-6 pt-4">
+             <div className="flex items-center gap-8 pt-6">
                 <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-black/80 hover:text-black">
-                  <SafeClient><Code className="w-7 h-7" /></SafeClient>
+                  <SafeClient><Code className="w-8 h-8" /></SafeClient>
                 </a>
                 <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-black/80 hover:text-black">
-                  <SafeClient><Linkedin className="w-7 h-7" /></SafeClient>
+                  <SafeClient><Linkedin className="w-8 h-8" /></SafeClient>
                 </a>
             </div>
           </nav>
