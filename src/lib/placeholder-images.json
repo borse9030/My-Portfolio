@@ -31,6 +31,12 @@
       "imageHint": "brain technology"
     },
     {
+      "id": "project-4",
+      "description": "Babizz Drink Project Image",
+      "imageUrl": "https://picsum.photos/seed/drink-project/500/300",
+      "imageHint": "drink menu"
+    },
+    {
       "id": "achievement-1",
       "description": "Software Engineering Job Simulation Certificate",
       "imageUrl": "/1753912864698.png",

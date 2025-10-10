@@ -35,6 +35,15 @@ const allProjects = [
     github: 'https://github.com/borse9030/Face-Recognition-Based-Attendance-System',
     demo: '#'
   },
+  {
+    id: 'project-4',
+    title: 'Babizz Drink Project',
+    description: 'A web application for a drink service, likely featuring a menu, ordering, and other related functionalities.',
+    tags: ['Web', 'E-commerce'],
+    category: 'Web',
+    github: 'https://github.com/borse9030/babizz-drink-project',
+    demo: '#'
+  }
 ];
 
 const filters = ['All', 'Web', 'AI', 'Other'];
