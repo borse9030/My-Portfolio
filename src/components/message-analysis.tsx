@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useCollection, useFirestore, useMemoFirebase, useAuth, useUser } from '@/firebase';
 import { collection, orderBy, query } from 'firebase/firestore';
 import { WithId } from '@/firebase/firestore/use-collection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { signInAnonymously } from 'firebase/auth';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 interface Message {
   name: string;
@@ -53,17 +55,16 @@ export default function MessageAnalysis() {
   }, [auth, user, isUserLoading]);
 
   const messagesQuery = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    // Query the user's specific messages sub-collection
+    if (!firestore || !user?.uid) return null;
     return query(
       collection(firestore, 'users', user.uid, 'messages'),
       orderBy('createdAt', 'desc')
     );
-  }, [firestore, user]);
+  }, [firestore, user?.uid]);
 
-  const { data: messages, isLoading } = useCollection<Message>(messagesQuery);
+  const { data: messages, isLoading, error } = useCollection<Message>(messagesQuery);
 
-  const showLoadingState = isLoading || isUserLoading || !user;
+  const showLoadingState = isLoading || isUserLoading;
 
   return (
     <section id="message-analysis" className="py-16 md:py-24">
@@ -73,17 +74,29 @@ export default function MessageAnalysis() {
             Your Submitted Messages
           </h2>
           <div className="space-y-4 min-h-[200px]">
-            {showLoadingState && (
+            {showLoadingState && !error && (
               <div className="space-y-4">
                 <Skeleton className="h-24 w-full" />
                 <Skeleton className="h-24 w-full" />
                 <Skeleton className="h-24 w-full" />
               </div>
             )}
-            {!showLoadingState && messages && messages.length > 0 && (
+
+            {error && (
+               <Alert variant="destructive">
+                 <AlertCircle className="h-4 w-4" />
+                 <AlertTitle>Error Fetching Messages</AlertTitle>
+                 <AlertDescription>
+                   Could not load your messages due to a permission error. Please ensure you are logged in and have access.
+                 </AlertDescription>
+               </Alert>
+            )}
+
+            {!showLoadingState && !error && messages && messages.length > 0 && (
               messages.map((msg) => <MessageCard key={msg.id} message={msg} />)
             )}
-            {!showLoadingState && (!messages || messages.length === 0) && (
+            
+            {!showLoadingState && !error && (!messages || messages.length === 0) && (
               <div className="border-2 border-dashed border-gray-400/50 rounded-2xl min-h-[200px] flex items-center justify-center p-8">
                 <p className="text-foreground/60 font-bold uppercase tracking-wider">
                   Your submitted messages will appear here.
