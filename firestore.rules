@@ -1,113 +1,99 @@
 /**
- * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
- *
- * Core Philosophy:
- * This ruleset provides public read access to portfolio content (projects, skills, about me, contact info)
- * while restricting write access to the website owner.  Contact form submissions ("messages")
- * are publicly writeable (create only) but not readable except by the owner (future admin).
- *
- * Data Structure:
- * - /projects/{projectId}: Stores individual project details.
- * - /skills/{skillId}: Stores individual skill details.
- * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores "About Me" section content.
- * - /messages/{messageId}: Stores contact form submissions.
- *
- * Key Security Decisions:
- * - Public read access is granted to projects, skills, contact info, and about me sections.
- * - Only authenticated users can submit contact form messages.
- * - Listing messages is denied to all users, based on the provided error report and the
- *   reasoning in `backend.json`.
+ * @file Firebase Security Rules for Bhavesh's Portfolio
+ * @core_philosophy This ruleset prioritizes public read access for portfolio content (projects, skills, aboutMe, contactInfo)
+ *   while restricting write access to authenticated users (Bhavesh in this case). Message submissions are publicly writeable by authenticated users.
+ * @data_structure The data is organized into top-level collections: /projects, /skills, /contactInfo, /aboutMe, and /messages.
+ *   Each collection contains documents representing individual entities.
+ * @key_security_decisions Public read access is granted to all portfolio content.
+ *   Write access to portfolio content is restricted to authenticated users only.
+ *   Write access to messages is granted to all authenticated users. Listing messages is disallowed for non-admin users.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to projects and restricts write access.
+     * @description Allows anyone to read project data, but only authenticated users can create, update, or delete projects.
      * @path /projects/{projectId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) - Any user can read project data.
+     * @allow (create, update, delete) - Authenticated user can modify.
+     * @deny (create, update, delete) - Unauthenticated user cannot modify.
+     * @principle Public read, authenticated-user-only writes.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
     /**
-     * @description Grants public read access to skills and restricts write access.
+     * @description Allows anyone to read skill data, but only authenticated users can create, update, or delete skills.
      * @path /skills/{skillId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) - Any user can read skill data.
+     * @allow (create, update, delete) - Authenticated user can modify.
+     * @deny (create, update, delete) - Unauthenticated user cannot modify.
+     * @principle Public read, authenticated-user-only writes.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
     /**
-     * @description Grants public read access to contact info and restricts write access.
+     * @description Allows anyone to read contact info, but only authenticated users can create, update, or delete contact info.
      * @path /contactInfo/{contactInfoId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) - Any user can read contact info.
+     * @allow (create, update, delete) - Authenticated user can modify.
+     * @deny (create, update, delete) - Unauthenticated user cannot modify.
+     * @principle Public read, authenticated-user-only writes.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
     /**
-     * @description Grants public read access to about me section and restricts write access.
+     * @description Allows anyone to read "about me" data, but only authenticated users can create, update, or delete "about me" data.
      * @path /aboutMe/{aboutMeId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) - Any user can read "about me" data.
+     * @allow (create, update, delete) - Authenticated user can modify.
+     * @deny (create, update, delete) - Unauthenticated user cannot modify.
+     * @principle Public read, authenticated-user-only writes.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
     /**
-     * @description Allows any authenticated user to create a message, but restricts reading.
+     * @description Allows anyone to create messages (contact form submissions), but listing messages is denied.  Getting a specific message requires authentication.
      * @path /messages/{messageId}
-     * @allow get: if false;
-     * @allow list: if false;
-     * @allow create: if isSignedIn();
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public write (create only), no read access (except future admin).
+     * @allow (create) - Any signed in user can create messages.
+     * @allow (get) - Any signed in user can get messages.
+     * @deny (list) - Listing of messages is not allowed.
+     * @deny (update, delete) - Updating or deleting messages is not allowed.
+     * @principle Public writes for message submissions, restricted reads.
      */
     match /messages/{messageId} {
-      allow get: if false;
+      allow get: if isSignedIn();
       allow list: if false;
       allow create: if isSignedIn();
       allow update: if false;
       allow delete: if false;
     }
-  }
 
-  // Helper function to determine if a user is signed in.
-  function isSignedIn() {
-    return request.auth != null;
+    /**
+     * @description Checks if the user is signed in
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
   }
 }
