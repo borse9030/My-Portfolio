@@ -140,6 +140,42 @@
         "id",
         "bio"
       ]
+    },
+    "Message": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Message",
+      "type": "object",
+      "description": "Represents a message submitted through the contact form.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Message entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the person who sent the message."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the person who sent the message.",
+          "format": "email"
+        },
+        "message": {
+          "type": "string",
+          "description": "The content of the message."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the message was created."
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "message",
+        "createdAt"
+      ]
     }
   },
   "auth": {
@@ -213,8 +249,24 @@
             }
           ]
         }
+      },
+      {
+        "path": "/messages/{messageId}",
+        "definition": {
+          "entityName": "Message",
+          "schema": {
+            "$ref": "#/backend/entities/Message"
+          },
+          "description": "Stores messages submitted through the contact form.",
+          "params": [
+            {
+              "name": "messageId",
+              "description": "The unique identifier for each message."
+            }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore structure is designed to store data for Bhavesh's portfolio website. It includes collections for projects, skills, contact information, and the 'About Me' section. Each collection stores documents representing individual entities. The structure prioritizes simplicity and ease of querying, suitable for a portfolio application where data is primarily read-only or updated infrequently by Bhavesh. No complex authorization is needed since only the website owner (Bhavesh) needs write access. This design leverages structural segregation, placing each entity type in its own collection, simplifying rules. Since the entities are managed by a single user, no denormalization is needed for authorization independence. QAPs are supported because each entity has its own dedicated collection."
+    "reasoning": "The Firestore structure is designed to store data for Bhavesh's portfolio website. It includes collections for projects, skills, contact information, the 'About Me' section, and now messages from the contact form. Each collection stores documents representing individual entities. The structure prioritizes simplicity and ease of querying. No complex authorization is needed since only the website owner (Bhavesh) needs write access to most collections. For the 'messages' collection, any authenticated or anonymous user will have write access, but only Bhavesh (as an admin, which is a future concept) would have read access through a dedicated dashboard."
   }
 }
