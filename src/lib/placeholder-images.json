@@ -3,7 +3,7 @@
     {
       "id": "hero-profile",
       "description": "Profile picture of Bhavesh for the hero section.",
-      "imageUrl": "/sopan.jpg",
+      "imageUrl": "/IMG_20250902_175543_746.webp",
       "imageHint": "man portrait"
     },
     {
@@ -14,27 +14,21 @@
     },
     {
       "id": "project-1",
-      "description": "Screenshot of Project One.",
-      "imageUrl": "https://picsum.photos/seed/project1/500/300",
-      "imageHint": "website screenshot"
+      "description": "AI Chatbot Beta Project Image",
+      "imageUrl": "https://picsum.photos/seed/ai-chatbot/500/300",
+      "imageHint": "ai concept"
     },
     {
       "id": "project-2",
-      "description": "Screenshot of Project Two.",
-      "imageUrl": "https://picsum.photos/seed/project2/500/300",
-      "imageHint": "dashboard ui"
+      "description": "E-commerce Platform Project Image",
+      "imageUrl": "https://picsum.photos/seed/ecommerce-platform/500/300",
+      "imageHint": "food groceries"
     },
     {
       "id": "project-3",
-      "description": "Screenshot of Project Three.",
-      "imageUrl": "https://picsum.photos/seed/project3/500/300",
-      "imageHint": "mobile app"
-    },
-    {
-      "id": "project-4",
-      "description": "Screenshot of Project Four.",
-      "imageUrl": "https://picsum.photos/seed/project4/500/300",
-      "imageHint": "portfolio builder"
+      "description": "Image Recognition API Project Image",
+      "imageUrl": "https://picsum.photos/seed/image-recognition/500/300",
+      "imageHint": "brain technology"
     }
   ]
 }
