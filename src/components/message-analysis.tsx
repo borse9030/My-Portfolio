@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, useAuth, useUser } from '@/firebase';
 import { collection, orderBy, query } from 'firebase/firestore';
 import { WithId } from '@/firebase/firestore/use-collection';
 import { Skeleton } from '@/components/ui/skeleton';
+import { signInAnonymously } from 'firebase/auth';
 
 interface Message {
   name: string;
@@ -40,13 +41,25 @@ function MessageCard({ message }: { message: WithId<Message> }) {
 
 export default function MessageAnalysis() {
   const firestore = useFirestore();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (auth && !user && !isUserLoading) {
+      signInAnonymously(auth).catch((error) => {
+        console.error("Anonymous sign-in failed:", error);
+      });
+    }
+  }, [auth, user, isUserLoading]);
 
   const messagesQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !user) return null; // Only query if user is authenticated
     return query(collection(firestore, 'messages'), orderBy('createdAt', 'desc'));
-  }, [firestore]);
+  }, [firestore, user]);
 
   const { data: messages, isLoading } = useCollection<Message>(messagesQuery);
+
+  const showLoadingState = isLoading || isUserLoading || !user;
 
   return (
     <section id="message-analysis" className="py-16 md:py-24">
@@ -56,17 +69,17 @@ export default function MessageAnalysis() {
             Message Analysis
           </h2>
           <div className="space-y-4 min-h-[200px]">
-            {isLoading && (
+            {showLoadingState && (
               <div className="space-y-4">
                 <Skeleton className="h-24 w-full" />
                 <Skeleton className="h-24 w-full" />
                 <Skeleton className="h-24 w-full" />
               </div>
             )}
-            {!isLoading && messages && messages.length > 0 && (
+            {!showLoadingState && messages && messages.length > 0 && (
               messages.map((msg) => <MessageCard key={msg.id} message={msg} />)
             )}
-            {!isLoading && (!messages || messages.length === 0) && (
+            {!showLoadingState && (!messages || messages.length === 0) && (
               <div className="border-2 border-dashed border-gray-400/50 rounded-2xl min-h-[200px] flex items-center justify-center p-8">
                 <p className="text-foreground/60 font-bold uppercase tracking-wider">
                   Submitted messages will appear here.
