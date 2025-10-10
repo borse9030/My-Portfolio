@@ -83,7 +83,9 @@ export default function Header() {
         </Link>
         <div className="md:hidden">
           <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-white/30 backdrop-blur-sm">
+            <SafeClient>
             {isMenuOpen ? <X className="h-6 w-6 text-black" /> : <Menu className="h-6 w-6 text-black" />}
+            </SafeClient>
           </Button>
         </div>
       </div>
@@ -98,10 +100,10 @@ export default function Header() {
             ))}
              <div className="flex items-center gap-6 pt-4">
                 <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-black/80 hover:text-black">
-                  <Code className="w-7 h-7" />
+                  <SafeClient><Code className="w-7 h-7" /></SafeClient>
                 </a>
                 <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-black/80 hover:text-black">
-                  <Linkedin className="w-7 h-7" />
+                  <SafeClient><Linkedin className="w-7 h-7" /></SafeClient>
                 </a>
             </div>
           </nav>

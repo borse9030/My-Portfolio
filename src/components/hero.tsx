@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Code, Linkedin, ArrowRight, Dot } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import SafeClient from './safe-client';
 
 const socialLinks = [
   { icon: Code, href: 'https://github.com', 'aria-label': 'Code' },
@@ -24,16 +25,16 @@ export default function Hero() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/80">
-              CONTACT ME <ArrowRight className="ml-2 h-5 w-5" />
+              CONTACT ME <SafeClient><ArrowRight className="ml-2 h-5 w-5" /></SafeClient>
             </Button>
             <Button size="lg" variant="outline" className="bg-gray-200/80 border-gray-400 text-black hover:bg-gray-300/80">
-              VIEW RESUME <Dot className="ml-2 h-6 w-6" />
+              VIEW RESUME <SafeClient><Dot className="ml-2 h-6 w-6" /></SafeClient>
             </Button>
           </div>
            <div className="flex items-center space-x-4 pt-4">
             {socialLinks.map((link, index) => (
               <a key={index} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link['aria-label']} className="text-black/80 hover:text-black transition-colors">
-                <link.icon className="w-6 h-6" />
+                <SafeClient><link.icon className="w-6 h-6" /></SafeClient>
               </a>
             ))}
           </div>

@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Code, Linkedin } from 'lucide-react';
+import SafeClient from "./safe-client";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -56,7 +57,7 @@ export default function Contact() {
               <div className="flex items-center space-x-6 pt-4">
                   {socialLinks.map((link, index) => (
                       <a key={index} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link['aria-label']} className="text-foreground/80 hover:text-foreground transition-colors">
-                          <link.icon className="w-8 h-8" />
+                          <SafeClient><link.icon className="w-8 h-8" /></SafeClient>
                       </a>
                   ))}
               </div>

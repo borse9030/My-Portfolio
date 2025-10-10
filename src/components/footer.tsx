@@ -1,5 +1,6 @@
 "use client";
 import { Code, Linkedin } from 'lucide-react';
+import SafeClient from './safe-client';
 
 const socialLinks = [
     { icon: Code, href: 'https://github.com', 'aria-label': 'Code' },
@@ -16,7 +17,7 @@ export default function Footer() {
                 <div className="flex items-center space-x-4">
                     {socialLinks.map((link, index) => (
                         <a key={index} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link['aria-label']} className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                            <link.icon className="w-6 h-6" />
+                            <SafeClient><link.icon className="w-6 h-6" /></SafeClient>
                         </a>
                     ))}
                 </div>

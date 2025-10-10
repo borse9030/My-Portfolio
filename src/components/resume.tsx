@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
+import SafeClient from './safe-client';
 
 export default function Resume() {
   return (
@@ -13,7 +14,7 @@ export default function Resume() {
           COMPREHENSIVE LOOK AT MY SKILLS, EXPERIENCE, AND QUALIFICATIONS.
         </p>
         <Button size="lg" className="bg-white text-black font-bold rounded-full hover:bg-gray-200 shadow-lg">
-          <Eye className="mr-2 h-5 w-5" />
+          <SafeClient><Eye className="mr-2 h-5 w-5" /></SafeClient>
           VIEW RESUME
         </Button>
       </div>

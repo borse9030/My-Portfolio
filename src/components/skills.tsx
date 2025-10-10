@@ -1,3 +1,4 @@
+import SafeClient from './safe-client';
 import { Card } from '@/components/ui/card';
 
 const skills = [
@@ -59,7 +60,7 @@ export default function Skills() {
                 {skillCategory.technologies.map((tech) => (
                   <div key={tech.name} className="flex flex-col items-center justify-center gap-2">
                     <div className="w-16 h-16 flex items-center justify-center">
-                      {tech.icon}
+                      <SafeClient>{tech.icon}</SafeClient>
                     </div>
                     <p className="font-headline font-semibold text-sm">{tech.name}</p>
                   </div>
@@ -184,7 +185,7 @@ function TensorflowIcon() {
 function PytorchIcon() {
     return (
         <svg viewBox="0 0 24 24" className="w-12 h-12">
-            <path fill="#ee4c2c" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1.29 15.17c-.39.39-1.02.39-1.41 0s-.39-1.02 0-1.41l1.63-1.63c.2-.2.45-.29.71-.29s.51.1.71.29l1.63 1.63c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0L12 15.58l-1.29 1.59zm-3.6-3.6c-.39.39-1.02.39-1.41 0s-.39-1.02 0-1.41l1.63-1.63c.2-.2.45-.29.71-.29s.51.1.71.29l1.63 1.63c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0l-1.3-1.3l-1.29 1.3zm8.6-3.6c-.39.39-1.02.39-1.41 0s-.39-1.02 0-1.41l1.63-1.63c.2-.2.45-.29.71-.29s.51.1.71.29l1.63 1.63c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0l-1.3-1.3-1.29 1.3z"/>
+            <path fill="#ee4c2c" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1.29 15.17c-.39.39-1.02.39-1.41 0s-.39-1.02 0-1.41l1.63-1.63c.2-.2.45-.29.71-.29s.51.1.71.29l1.63 1.63c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0L12 15.58l-1.29 1.59zm-3.6-3.6c-.39.39-1.02.39-1.41 0s-.39-1.02 0-1.41l1.63-1.63c.2-.2.45-.29.71-.29s.51.1.71.29l1.63 1.63c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0l-1.3-1.3l-1.29 1.3zm8.6-3.6c-.39.39-1.02.39-1.41 0s-.39-1.02 0-1.41l1.63-1.63c.2-.2.45-.29.71-.29s.51.1.71.29l1.63 1.63c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0l-1.3-1.3l-1.29 1.3z"/>
             <path fill="#ee4c2c" d="M7 6h10v2H7z"/>
         </svg>
     )
