@@ -3,97 +3,93 @@
  * @description This ruleset defines access control for Bhavesh's portfolio data.
  *
  * Core Philosophy:
- * The security model prioritizes ease of use during prototyping.  Read access is generally open to facilitate development.
- * Write access is restricted to prevent unauthorized data modification.  Specific rules are implemented for different collections
- * based on their intended use.
+ *  - Public read access for content displayed on the portfolio (projects, skills, about me, contact info).
+ *  - Public write access for submitting contact form messages.
+ *  - No specific user authentication or roles are enforced beyond allowing any signed-in or anonymous user
+ *    to submit contact form messages.
  *
  * Data Structure:
- * - /projects/{projectId}: Stores individual project details.
- * - /skills/{skillId}: Stores individual skill information.
- * - /contactInfo/{contactInfoId}: Stores Bhavesh's contact information.
- * - /aboutMe/{aboutMeId}: Stores the content for the 'About Me' section.
- * - /messages/{messageId}: Stores contact form messages. Write access is granted to all authenticated users.
+ *  - Top-level collections for each entity: /projects/{projectId}, /skills/{skillId}, /contactInfo/{contactInfoId},
+ *    /aboutMe/{aboutMeId}, /messages/{messageId}.
  *
  * Key Security Decisions:
- * - Public read access for all collections except messages.
- * - Authenticated write access for messages.
- * - No user listing is explicitly denied.
- *
- * Denormalization for Authorization:
- * - Not used in this version.
- *
- * Structural Segregation:
- * - Not used in this version.
+ *  - Listing of any collections is public.
+ *  - Schema validation is not enforced in this prototyping phase, except for ownership on creation where necessary.
+ *  - All write operations are denied.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access and restricts write access to the 'projects' collection.
+     * @description Grants public read access to project data.
      * @path /projects/{projectId}
-     * @allow (get, list) Allows any user to read project details.
-     * @deny (create, update, delete) Denies any user from creating, updating, or deleting project details.
-     * @principle Public read, restricted write.
+     * @allow (get, list): Any user can read project details.
+     * @deny (create, update, delete): No one can create, update, or delete projects.
+     * @principle Allows public read access for portfolio content.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Grants public read access and restricts write access to the 'skills' collection.
+     * @description Grants public read access to skill data.
      * @path /skills/{skillId}
-     * @allow (get, list) Allows any user to read skill information.
-     * @deny (create, update, delete) Denies any user from creating, updating, or deleting skill information.
-     * @principle Public read, restricted write.
+     * @allow (get, list): Any user can read skill details.
+     * @deny (create, update, delete): No one can create, update, or delete skills.
+     * @principle Allows public read access for portfolio content.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Grants public read access and restricts write access to the 'contactInfo' collection.
+     * @description Grants public read access to contact information.
      * @path /contactInfo/{contactInfoId}
-     * @allow (get, list) Allows any user to read contact information.
-     * @deny (create, update, delete) Denies any user from creating, updating, or deleting contact information.
-     * @principle Public read, restricted write.
+     * @allow (get, list): Any user can read contact information.
+     * @deny (create, update, delete): No one can create, update, or delete contact information.
+     * @principle Allows public read access for portfolio content.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Grants public read access and restricts write access to the 'aboutMe' collection.
+     * @description Grants public read access to "About Me" data.
      * @path /aboutMe/{aboutMeId}
-     * @allow (get, list) Allows any user to read 'About Me' section content.
-     * @deny (create, update, delete) Denies any user from creating, updating, or deleting 'About Me' section content.
-     * @principle Public read, restricted write.
+     * @allow (get, list): Any user can read the "About Me" section.
+     * @deny (create, update, delete): No one can create, update, or delete the "About Me" section.
+     * @principle Allows public read access for portfolio content.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Grants authenticated write access to the 'messages' collection, effectively allowing any signed in user to write messages.
+     * @description Allows public read and write access to messages.
      * @path /messages/{messageId}
-     * @allow (create, update, delete) Allows only authenticated users to create, update, and delete messages.
-     * @allow (list, get) Allows only authenticated users to read messages.
-     * @deny (create, update, delete) Denies unauthenticated users from creating, updating, or deleting messages.
-     * @principle Authenticated write access.
+     * @allow (get, list): Any user can read messages.
+     * @allow (create): Any user can create messages.
+     * @deny (update, delete): No one can update or delete messages.
+     * @principle Allows anyone to submit contact form messages, but prevents modification or deletion.
      */
     match /messages/{messageId} {
-      allow list, get: if request.auth != null;
-      allow create, update, delete: if request.auth != null;
-    }
-
-    // Generic fallback rule - all other paths are read-only
-    match /{document=**} {
-       allow read: if true;
-       allow write: if false;
+      allow get, list: if true; // Public read
+      allow create: if true; // Public write
+      allow update: if false; // No edits or deletes
+      allow delete: if false;
     }
   }
 }
