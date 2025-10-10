@@ -1,104 +1,109 @@
-/**
- * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
- *
- * Core Philosophy:
- * This ruleset provides a baseline security configuration for a portfolio application.
- * All data except for the messages collection is intended to be read-only for the public
- * and write-only for an admin (not yet implemented). The messages collection allows any
- * authenticated user to submit messages via the contact form.
- *
- * Data Structure:
- * The Firestore database consists of the following top-level collections:
- * - /projects/{projectId}: Stores project details.
- * - /skills/{skillId}: Stores skill information.
- * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores 'About Me' section content.
- * - /messages/{messageId}: Stores messages from the contact form.
- *
- * Key Security Decisions:
- * - Read-only collections (projects, skills, contactInfo, aboutMe) are publicly readable.
- * - Write access to these collections is currently open. This should be restricted to an admin role in the future.
- * - The messages collection allows any authenticated user to create new messages.
- * - Listing all documents in a collection is allowed for read-only collections but not for messages.
- *
- * Denormalization for Authorization:
- * - No denormalization is currently implemented. When admin roles are introduced, a field indicating admin status
- *   should be denormalized onto the user document to avoid complex queries in the security rules.
- *
- * Structural Segregation:
- * - No structural segregation is currently implemented.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Rules for the /projects collection. Allows public read access and open write access.
-     * @path /projects/{projectId}
-     * @allow get, list: Example: Any user can read project details.
-     * @deny create, update, delete: Example: Non-admin users cannot modify project details.
-     * @principle Public read, open write (should be admin-only in the future).
-     */
-    match /projects/{projectId} {
-      allow get, list: if true;
-      allow create, update, delete: if true; // TODO: Restrict to admin only
-    }
-
-    /**
-     * @description Rules for the /skills collection. Allows public read access and open write access.
-     * @path /skills/{skillId}
-     * @allow get, list: Example: Any user can read skill details.
-     * @deny create, update, delete: Example: Non-admin users cannot modify skill details.
-     * @principle Public read, open write (should be admin-only in the future).
-     */
-    match /skills/{skillId} {
-      allow get, list: if true;
-      allow create, update, delete: if true; // TODO: Restrict to admin only
-    }
-
-    /**
-     * @description Rules for the /contactInfo collection. Allows public read access and open write access.
-     * @path /contactInfo/{contactInfoId}
-     * @allow get, list: Example: Any user can read contact info.
-     * @deny create, update, delete: Example: Non-admin users cannot modify contact info.
-     * @principle Public read, open write (should be admin-only in the future).
-     */
-    match /contactInfo/{contactInfoId} {
-      allow get, list: if true;
-      allow create, update, delete: if true; // TODO: Restrict to admin only
-    }
-
-    /**
-     * @description Rules for the /aboutMe collection. Allows public read access and open write access.
-     * @path /aboutMe/{aboutMeId}
-     * @allow get, list: Example: Any user can read the about me section.
-     * @deny create, update, delete: Example: Non-admin users cannot modify the about me section.
-     * @principle Public read, open write (should be admin-only in the future).
-     */
-    match /aboutMe/{aboutMeId} {
-      allow get, list: if true;
-      allow create, update, delete: if true; // TODO: Restrict to admin only
-    }
-
-    /**
-     * @description Rules for the /messages collection. Allows authenticated users to create messages.
-     * @path /messages/{messageId}
-     * @allow create: Example: Any authenticated user can create a message.
-     * @deny get, list, update, delete: Example: Non-admin users cannot read, list, update, or delete messages.
-     * @principle Authenticated users can create messages; other operations are denied.
-     */
-    match /messages/{messageId} {
-      allow get, list: if false; // Only admin should be able to read and list all the messages.
-      allow create: if isSignedIn();
-      allow update, delete: if false; // No one is allowed to update or delete messages.
-    }
-
-    /**
-     * @description Defines a function to check if a user is signed in.
-     * @returns {boolean} True if the user is signed in, false otherwise.
+     * @description Defines whether the user is signed in.
+     * @example isSignedIn() == true if request.auth != null
+     * @return {bool} True if the user is signed in.
      */
     function isSignedIn() {
       return request.auth != null;
+    }
+
+    /**
+     * @description Defines whether the user is the owner of the resource.
+     * @param {string} userId - The user ID to check against.
+     * @example isOwner('user123') == (request.auth.uid == 'user123')
+     * @return {bool} True if the user is the owner.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * @description Defines whether the user is the existing owner of the resource.
+     * @param {string} userId - The user ID to check against.
+     * @param {string} resourceOwnerId - The resource OwnerId to check against.
+     * @example isExistingOwner('user123') == (isOwner('user123') && resource != null)
+     * @return {bool} True if the user is the existing owner.
+     */
+    function isExistingOwner(resourceOwnerId) {
+      return request.auth.uid == resourceOwnerId && resource != null;
+    }
+
+    /**
+     * @description Security rules for the /projects collection.
+     * @path /projects/{projectId}
+     * @allow (get, list): Any user can read project details.
+     * @allow (create, update, delete): Only the owner can modify project details (TODO: requires ownership field in schema).
+     * @deny (create, update, delete): Any non-owner attempts to modify project details.
+     * @principle Public read, owner-only writes (enforced via TODO until schema is updated).
+     */
+    match /projects/{projectId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && request.resource.data.ownerId == request.auth.uid && request.auth.uid == resource.data.ownerId;
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
+    /**
+     * @description Security rules for the /skills collection.
+     * @path /skills/{skillId}
+     * @allow (get, list): Any user can read skill information.
+     * @allow (create, update, delete): Only the owner can modify skill information (TODO: requires ownership field in schema).
+     * @deny (create, update, delete): Any non-owner attempts to modify skill information.
+     * @principle Public read, owner-only writes (enforced via TODO until schema is updated).
+     */
+    match /skills/{skillId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerId == request.auth.uid && request.auth.uid == resource.data.ownerId;
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
+    /**
+     * @description Security rules for the /contactInfo collection.
+     * @path /contactInfo/{contactInfoId}
+     * @allow (get, list): Any user can read contact information.
+     * @allow (create, update, delete): Only the owner can modify contact information (TODO: requires ownership field in schema).
+     * @deny (create, update, delete): Any non-owner attempts to modify contact information.
+     * @principle Public read, owner-only writes (enforced via TODO until schema is updated).
+     */
+    match /contactInfo/{contactInfoId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerId == request.auth.uid && request.auth.uid == resource.data.ownerId;
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
+    /**
+     * @description Security rules for the /aboutMe collection.
+     * @path /aboutMe/{aboutMeId}
+     * @allow (get, list): Any user can read 'About Me' content.
+     * @allow (create, update, delete): Only the owner can modify 'About Me' content (TODO: requires ownership field in schema).
+     * @deny (create, update, delete): Any non-owner attempts to modify 'About Me' content.
+     * @principle Public read, owner-only writes (enforced via TODO until schema is updated).
+     */
+    match /aboutMe/{aboutMeId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerId == request.auth.uid && request.auth.uid == resource.data.ownerId;
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
+    /**
+     * @description Security rules for the /messages collection.
+     * @path /messages/{messageId}
+     * @allow (create): Any authenticated or anonymous user can submit a message.
+     * @allow (get, list): Only an admin can read messages (TODO: requires admin role implementation).
+     * @deny (update, delete): No user can update or delete messages.
+     * @principle Public write, admin-only read (enforced via TODO until admin roles are implemented).
+     */
+    match /messages/{messageId} {
+      allow create: if true;
+      allow get, list: if false; // TODO: Implement admin role check for reading messages.
+      allow update, delete: if false;
     }
   }
 }
