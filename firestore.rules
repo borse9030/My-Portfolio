@@ -1,22 +1,40 @@
 /**
- * @file Firebase Security Rules for Bhavesh's Portfolio
- * @core_philosophy This ruleset prioritizes ease of data access for the portfolio website while ensuring that only the website owner can modify certain data.
- * @data_structure The database consists of top-level collections for 'projects', 'skills', 'contactInfo', 'aboutMe', and 'messages'. Each collection contains documents representing individual entities.
- * @key_security_decisions
- *  - Projects, skills, contactInfo, and aboutMe can be read publicly but only modified by the owner (not yet implemented, defaults to no one).
- *  - Messages can be created by any authenticated or unauthenticated user.
- *  - Listing of messages is denied to everyone in this initial version, as it's intended to be accessed via a dedicated admin dashboard (not implemented).
+ * @file Firestore Security Rules
+ * @description This ruleset defines access control for Bhavesh's portfolio data.
+ *
+ * Core Philosophy:
+ * The security model prioritizes ease of use during prototyping.  Read access is generally open to facilitate development.
+ * Write access is restricted to prevent unauthorized data modification.  Specific rules are implemented for different collections
+ * based on their intended use.
+ *
+ * Data Structure:
+ * - /projects/{projectId}: Stores individual project details.
+ * - /skills/{skillId}: Stores individual skill information.
+ * - /contactInfo/{contactInfoId}: Stores Bhavesh's contact information.
+ * - /aboutMe/{aboutMeId}: Stores the content for the 'About Me' section.
+ * - /messages/{messageId}: Stores contact form messages. Write access is granted to all authenticated users.
+ *
+ * Key Security Decisions:
+ * - Public read access for all collections except messages.
+ * - Authenticated write access for messages.
+ * - No user listing is explicitly denied.
+ *
+ * Denormalization for Authorization:
+ * - Not used in this version.
+ *
+ * Structural Segregation:
+ * - Not used in this version.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Controls access to the 'projects' collection. Allows public read access but restricts write access.
+     * @description Grants public read access and restricts write access to the 'projects' collection.
      * @path /projects/{projectId}
-     * @allow (get, list) Any user can read the project details.
-     * @deny (create, update, delete) No user can modify project details in this version.
-     * @principle Public read, owner-only write (not yet implemented).
+     * @allow (get, list) Allows any user to read project details.
+     * @deny (create, update, delete) Denies any user from creating, updating, or deleting project details.
+     * @principle Public read, restricted write.
      */
     match /projects/{projectId} {
       allow get, list: if true;
@@ -24,11 +42,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Controls access to the 'skills' collection. Allows public read access but restricts write access.
+     * @description Grants public read access and restricts write access to the 'skills' collection.
      * @path /skills/{skillId}
-     * @allow (get, list) Any user can read the skill details.
-     * @deny (create, update, delete) No user can modify skill details in this version.
-     * @principle Public read, owner-only write (not yet implemented).
+     * @allow (get, list) Allows any user to read skill information.
+     * @deny (create, update, delete) Denies any user from creating, updating, or deleting skill information.
+     * @principle Public read, restricted write.
      */
     match /skills/{skillId} {
       allow get, list: if true;
@@ -36,11 +54,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Controls access to the 'contactInfo' collection. Allows public read access but restricts write access.
+     * @description Grants public read access and restricts write access to the 'contactInfo' collection.
      * @path /contactInfo/{contactInfoId}
-     * @allow (get, list) Any user can read the contact information.
-     * @deny (create, update, delete) No user can modify contact information in this version.
-     * @principle Public read, owner-only write (not yet implemented).
+     * @allow (get, list) Allows any user to read contact information.
+     * @deny (create, update, delete) Denies any user from creating, updating, or deleting contact information.
+     * @principle Public read, restricted write.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
@@ -48,11 +66,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Controls access to the 'aboutMe' collection. Allows public read access but restricts write access.
+     * @description Grants public read access and restricts write access to the 'aboutMe' collection.
      * @path /aboutMe/{aboutMeId}
-     * @allow (get, list) Any user can read the 'About Me' section.
-     * @deny (create, update, delete) No user can modify the 'About Me' section in this version.
-     * @principle Public read, owner-only write (not yet implemented).
+     * @allow (get, list) Allows any user to read 'About Me' section content.
+     * @deny (create, update, delete) Denies any user from creating, updating, or deleting 'About Me' section content.
+     * @principle Public read, restricted write.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
@@ -60,15 +78,22 @@ service cloud.firestore {
     }
 
     /**
-     * @description Controls access to the 'messages' collection. Allows any user (authenticated or unauthenticated) to create messages, but restricts all other access.
+     * @description Grants authenticated write access to the 'messages' collection, effectively allowing any signed in user to write messages.
      * @path /messages/{messageId}
-     * @allow (create) Any user can create a message.
-     * @deny (get, list, update, delete) No user can read, list, update or delete messages in this version.
-     * @principle Public write for message creation, restricted access otherwise.
+     * @allow (create, update, delete) Allows only authenticated users to create, update, and delete messages.
+     * @allow (list, get) Allows only authenticated users to read messages.
+     * @deny (create, update, delete) Denies unauthenticated users from creating, updating, or deleting messages.
+     * @principle Authenticated write access.
      */
     match /messages/{messageId} {
-      allow create: if true;
-      allow get, list, update, delete: if false;
+      allow list, get: if request.auth != null;
+      allow create, update, delete: if request.auth != null;
+    }
+
+    // Generic fallback rule - all other paths are read-only
+    match /{document=**} {
+       allow read: if true;
+       allow write: if false;
     }
   }
 }
