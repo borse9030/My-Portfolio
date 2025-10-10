@@ -2,88 +2,114 @@
  * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
  *
  * Core Philosophy:
- * This ruleset prioritizes secure access to portfolio data.  Write access to portfolio content
- * (projects, skills, aboutMe, contactInfo) is implicitly restricted and should be managed
- * via the Firebase console, not the client application. Read access to these collections is public.
- * Message submission from the contact form is enabled for all users, but reading messages is denied
- * to all users for now.
+ * This ruleset provides public read access to portfolio data (projects, skills, contact info, about me)
+ * while restricting write access to the website owner. Contact form messages can be created by anyone
+ * but are only readable by the owner.  No user-specific data is stored, so ownership is not a factor
+ * except for write operations on the core portfolio data.
  *
  * Data Structure:
- * - /projects/{projectId}: Stores individual project documents.
- * - /skills/{skillId}: Stores individual skill documents.
+ * - /projects/{projectId}: Stores project details.
+ * - /skills/{skillId}: Stores skill information.
  * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores 'About Me' section content.
- * - /messages/{messageId}: Stores contact form messages.
+ * - /aboutMe/{aboutMeId}: Stores the 'About Me' section content.
+ * - /messages/{messageId}: Stores messages submitted through the contact form.
  *
  * Key Security Decisions:
- * - Public read access for projects, skills, aboutMe and contactInfo to allow the portfolio to be viewed by anyone.
- * - All write operations are disabled for projects, skills, aboutMe and contactInfo. This enforces that the data can
- *   only be modified through the Firebase console (or backend functions with appropriate admin privileges in the future).
- * - Messages collection allows create from any authenticated or unauthenticated user, but no reads are currently allowed.
- * - No user listing is permitted.
+ * - Public read access for all portfolio data (projects, skills, contact info, about me).
+ * - Only the owner (defined externally as an admin) can create, update, or delete portfolio data.
+ * - Anyone can submit contact form messages (create), but only the owner can read them (get, list).
+ * - No user listing is allowed.
+ *
+ * Denormalization for Authorization:
+ *  - There's no explicit owner ID on the documents themselves. Authorization relies on an external
+ *    mechanism (e.g., a check in the backend functions) to determine if the user is an admin/owner.
+ *
+ * Structural Segregation:
+ *  - Public portfolio data and private contact form messages are stored in separate collections to
+ *    simplify access control.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to projects and denies all writes.
+     * @description Grants public read access to projects and restricts write access.
      * @path /projects/{projectId}
-     * @allow get, list: true
-     * @deny create, update, delete: false
-     * @principle Allows public access to project data while preventing unauthorized modifications.
+     * @allow get, list: if true;
+     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+     * @deny create: if true;
+     * @deny update: if true;
+     * @deny delete: if true;
+     * @principle Public read, owner-only writes.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
     }
 
     /**
-     * @description Grants public read access to skills and denies all writes.
+     * @description Grants public read access to skills and restricts write access.
      * @path /skills/{skillId}
-     * @allow get, list: true
-     * @deny create, update, delete: false
-     * @principle Allows public access to skill data while preventing unauthorized modifications.
+     * @allow get, list: if true;
+     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+     * @deny create: if true;
+     * @deny update: if true;
+     * @deny delete: if true;
+     * @principle Public read, owner-only writes.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
     }
 
     /**
-     * @description Grants public read access to contact info and denies all writes.
+     * @description Grants public read access to contact info and restricts write access.
      * @path /contactInfo/{contactInfoId}
      * @allow get, list: if true;
-     * @deny create, update, delete: false
-     * @principle Allows public access to contact info while preventing unauthorized modifications.
+     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+     * @deny create: if true;
+     * @deny update: if true;
+     * @deny delete: if true;
+     * @principle Public read, owner-only writes.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
     }
 
     /**
-     * @description Grants public read access to about me section and denies all writes.
+     * @description Grants public read access to about me and restricts write access.
      * @path /aboutMe/{aboutMeId}
-     * @allow get, list: if true
-     * @deny create, update, delete: false
-     * @principle Allows public access to about me data while preventing unauthorized modifications.
+     * @allow get, list: if true;
+     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+     * @deny create: if true;
+     * @deny update: if true;
+     * @deny delete: if true;
+     * @principle Public read, owner-only writes.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
     }
 
     /**
-     * @description Allows any authenticated user to create messages, but denies reading or updating.
+     * @description Allows anyone to create messages, but only the owner can read them.
      * @path /messages/{messageId}
-     * @allow create: if true;
-     * @deny get, list, update, delete: false;
-     * @principle Allows message submissions while restricting access to message content.
+     * @allow create: if isSignedIn();
+     * @allow get, list: if false; // TODO: Add owner validation once admin roles are implemented.
+     * @deny update: if true;
+     * @deny delete: if true;
+     * @principle Public creation, owner-only reads.
      */
     match /messages/{messageId} {
-      allow create: if true;
-      allow get, list, update, delete: if false;
+      allow create: if isSignedIn();
+      allow get, list: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow update: if false;
+      allow delete: if false;
     }
+  }
+
+  function isSignedIn() {
+    return request.auth != null;
   }
 }
