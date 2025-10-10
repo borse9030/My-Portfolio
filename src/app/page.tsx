@@ -4,6 +4,7 @@ import Contact from '@/components/contact';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import Hero from '@/components/hero';
+import MessageAnalysis from '@/components/message-analysis';
 import Projects from '@/components/projects';
 import Resume from '@/components/resume';
 import Skills from '@/components/skills';
@@ -20,6 +21,7 @@ export default function Home() {
         <Achievements />
         <Resume />
         <Contact />
+        <MessageAnalysis />
       </main>
       <Footer />
     </div>

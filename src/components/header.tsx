@@ -13,6 +13,7 @@ const navLinks = [
   { href: '#achievements', label: 'ACHIEVEMENTS' },
   { href: '#resume', label: 'RESUME' },
   { href: '#contact', label: 'CONTACT' },
+  { href: '#message-analysis', label: 'MESSAGE ANALYSIS' },
 ];
 
 const LogoIcon = () => (
