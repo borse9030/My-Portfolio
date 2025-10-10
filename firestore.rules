@@ -1,95 +1,129 @@
 /**
- * @file Firestore Security Rules
- * @description This ruleset defines access control for Bhavesh's portfolio data.
+ * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
  *
  * Core Philosophy:
- *  - Public read access for content displayed on the portfolio (projects, skills, about me, contact info).
- *  - Public write access for submitting contact form messages.
- *  - No specific user authentication or roles are enforced beyond allowing any signed-in or anonymous user
- *    to submit contact form messages.
+ * This ruleset provides public read access to portfolio data (projects, skills, contact info, about me)
+ * while restricting write access to the website owner. Contact form messages can be created by anyone
+ * but are only readable by the application owner.
  *
  * Data Structure:
- *  - Top-level collections for each entity: /projects/{projectId}, /skills/{skillId}, /contactInfo/{contactInfoId},
- *    /aboutMe/{aboutMeId}, /messages/{messageId}.
+ * - /projects/{projectId}: Stores individual project details.
+ * - /skills/{skillId}: Stores individual skill details.
+ * - /contactInfo/{contactInfoId}: Stores contact information.
+ * - /aboutMe/{aboutMeId}: Stores the 'About Me' content.
+ * - /messages/{messageId}: Stores contact form messages.
  *
  * Key Security Decisions:
- *  - Listing of any collections is public.
- *  - Schema validation is not enforced in this prototyping phase, except for ownership on creation where necessary.
- *  - All write operations are denied.
+ * - Public read access is granted to projects, skills, contact info, and about me sections.
+ * - Only authenticated users can create messages.
+ * - Listing messages is disallowed for all users except the application owner (future admin role).
+ * - The specific data shapes are NOT enforced to allow for rapid prototyping.
+ *
+ * Denormalization for Authorization:
+ * - This ruleset does not currently implement denormalization. If more complex authorization is needed (e.g., project-specific roles),
+ *   consider adding a `members` map to the relevant documents.
+ *
+ * Structural Segregation:
+ * - All data is stored in top-level collections.  There are no user-specific subcollections in this design.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to project data.
+     * @description Allows anyone to read project details, but restricts creation, updates, and deletion.
      * @path /projects/{projectId}
-     * @allow (get, list): Any user can read project details.
-     * @deny (create, update, delete): No one can create, update, or delete projects.
-     * @principle Allows public read access for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @deny create: if true; // Prevents anyone from creating projects.
+     * @deny update: if true; // Prevents anyone from updating projects.
+     * @deny delete: if true; // Prevents anyone from deleting projects.
+     * @principle Public read access, owner-only write access (not yet implemented).
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to skill data.
+     * @description Allows anyone to read skill details, but restricts creation, updates, and deletion.
      * @path /skills/{skillId}
-     * @allow (get, list): Any user can read skill details.
-     * @deny (create, update, delete): No one can create, update, or delete skills.
-     * @principle Allows public read access for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @deny create: if true; // Prevents anyone from creating skills.
+     * @deny update: if true; // Prevents anyone from updating skills.
+     * @deny delete: if true; // Prevents anyone from deleting skills.
+     * @principle Public read access, owner-only write access (not yet implemented).
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to contact information.
+     * @description Allows anyone to read contact information, but restricts creation, updates, and deletion.
      * @path /contactInfo/{contactInfoId}
-     * @allow (get, list): Any user can read contact information.
-     * @deny (create, update, delete): No one can create, update, or delete contact information.
-     * @principle Allows public read access for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @deny create: if true; // Prevents anyone from creating contact info.
+     * @deny update: if true; // Prevents anyone from updating contact info.
+     * @deny delete: if true; // Prevents anyone from deleting contact info.
+     * @principle Public read access, owner-only write access (not yet implemented).
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to "About Me" data.
+     * @description Allows anyone to read "About Me" information, but restricts creation, updates, and deletion.
      * @path /aboutMe/{aboutMeId}
-     * @allow (get, list): Any user can read the "About Me" section.
-     * @deny (create, update, delete): No one can create, update, or delete the "About Me" section.
-     * @principle Allows public read access for portfolio content.
+     * @allow get, list: if true;
+     * @allow create: if false;
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @deny create: if true; // Prevents anyone from creating about me.
+     * @deny update: if true; // Prevents anyone from updating about me.
+     * @deny delete: if true; // Prevents anyone from deleting about me.
+     * @principle Public read access, owner-only write access (not yet implemented).
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Allows public read and write access to messages.
+     * @description Allows any authenticated user to create messages, but only allows the application owner (future admin) to read them.
      * @path /messages/{messageId}
-     * @allow (get, list): Any user can read messages.
-     * @allow (create): Any user can create messages.
-     * @deny (update, delete): No one can update or delete messages.
-     * @principle Allows anyone to submit contact form messages, but prevents modification or deletion.
+     * @allow get: if false; // Only admin can read
+     * @allow list: if false; // No one can list
+     * @allow create: if isSignedIn();
+     * @allow update: if false;
+     * @allow delete: if false;
+     * @allow read: if false;
+     * @deny update: if true;
+     * @deny delete: if true;
+     * @principle Public write, private read.
      */
     match /messages/{messageId} {
-      allow get, list: if true; // Public read
-      allow create: if true; // Public write
-      allow update: if false; // No edits or deletes
-      allow delete: if false;
+      allow create: if isSignedIn();
+      allow get, list, update, delete: if false;
     }
+  }
+
+  // Helper function to determine if a user is signed in.
+  function isSignedIn() {
+    return request.auth != null;
+  }
+
+  // Helper function to determine if the request is from the owner.
+  function isOwner(userId) {
+    return request.auth.uid == userId;
   }
 }
