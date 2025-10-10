@@ -1,94 +1,89 @@
 /**
- * @file Overview
- * This ruleset secures Bhavesh's portfolio data on Firestore.
+ * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
  *
  * Core Philosophy:
- *  - Data is generally readable by anyone, but write access is strictly controlled.
- *  - The primary aim is to prevent unauthorized modifications while allowing public access for display.
- *  - No user-specific data exists. Thus, there is no user-ownership model.
+ * This ruleset prioritizes secure access to portfolio data.  Write access to portfolio content
+ * (projects, skills, aboutMe, contactInfo) is implicitly restricted and should be managed
+ * via the Firebase console, not the client application. Read access to these collections is public.
+ * Message submission from the contact form is enabled for all users, but reading messages is denied
+ * to all users for now.
  *
  * Data Structure:
- *  - Data is stored in top-level collections: `/projects/{projectId}`, `/skills/{skillId}`, `/contactInfo/{contactInfoId}`, `/aboutMe/{aboutMeId}`, and `/messages/{messageId}`.
+ * - /projects/{projectId}: Stores individual project documents.
+ * - /skills/{skillId}: Stores individual skill documents.
+ * - /contactInfo/{contactInfoId}: Stores contact information.
+ * - /aboutMe/{aboutMeId}: Stores 'About Me' section content.
+ * - /messages/{messageId}: Stores contact form messages.
  *
  * Key Security Decisions:
- *  - Listing is allowed for all collections, as the data is meant to be publicly viewable on Bhavesh's portfolio.
- *  - Write access to `projects`, `skills`, `contactInfo`, and `aboutMe` should ideally be restricted to Bhavesh only, but this is not yet implemented, so writes are denied.
- *  - Write access to `messages` is currently open to all, but this will be restricted to authenticated users or anonymous users in the future.
- *
- * Denormalization for Authorization:
- *  - No denormalization is necessary at this stage, but if user-specific settings or preferences were added in the future, they would be stored under `/users/{userId}` with an `id` field matching the `userId`.
- *
- * Structural Segregation:
- *  - Not applicable, as all data is intended to be public or admin-controlled.
+ * - Public read access for projects, skills, aboutMe and contactInfo to allow the portfolio to be viewed by anyone.
+ * - All write operations are disabled for projects, skills, aboutMe and contactInfo. This enforces that the data can
+ *   only be modified through the Firebase console (or backend functions with appropriate admin privileges in the future).
+ * - Messages collection allows create from any authenticated or unauthenticated user, but no reads are currently allowed.
+ * - No user listing is permitted.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Manages project data for the portfolio.
+     * @description Grants public read access to projects and denies all writes.
      * @path /projects/{projectId}
-     * @allow get, list: Anyone can read project data.
-     * @allow create, update, delete: No one can write project data.
-     * @deny create, update, delete: Unauthenticated user attempts to create a project.
-     * @principle Allows public read access but restricts write access.
+     * @allow get, list: true
+     * @deny create, update, delete: false
+     * @principle Allows public access to project data while preventing unauthorized modifications.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Implement admin-only write access
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Manages skill data for the portfolio.
+     * @description Grants public read access to skills and denies all writes.
      * @path /skills/{skillId}
-     * @allow get, list: Anyone can read skill data.
-     * @allow create, update, delete: No one can write skill data.
-     * @deny create, update, delete: Unauthenticated user attempts to create a skill.
-     * @principle Allows public read access but restricts write access.
+     * @allow get, list: true
+     * @deny create, update, delete: false
+     * @principle Allows public access to skill data while preventing unauthorized modifications.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Implement admin-only write access
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Manages contact information for the portfolio.
+     * @description Grants public read access to contact info and denies all writes.
      * @path /contactInfo/{contactInfoId}
-     * @allow get, list: Anyone can read contact information.
-     * @allow create, update, delete: No one can write contact information.
-     * @deny create, update, delete: Unauthenticated user attempts to create contact information.
-     * @principle Allows public read access but restricts write access.
+     * @allow get, list: if true;
+     * @deny create, update, delete: false
+     * @principle Allows public access to contact info while preventing unauthorized modifications.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Implement admin-only write access
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Manages the 'About Me' section content.
+     * @description Grants public read access to about me section and denies all writes.
      * @path /aboutMe/{aboutMeId}
-     * @allow get, list: Anyone can read the 'About Me' section.
-     * @allow create, update, delete: No one can write the 'About Me' section.
-     * @deny create, update, delete: Unauthenticated user attempts to modify the 'About Me' section.
-     * @principle Allows public read access but restricts write access.
+     * @allow get, list: if true
+     * @deny create, update, delete: false
+     * @principle Allows public access to about me data while preventing unauthorized modifications.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Implement admin-only write access
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Manages messages submitted through the contact form.
+     * @description Allows any authenticated user to create messages, but denies reading or updating.
      * @path /messages/{messageId}
-     * @allow get, list: Anyone can read the messages data.
-     * @allow create, update, delete: No one can write the messages data.
-     * @deny create, update, delete: Unauthenticated user attempts to write messages data.
-     * @principle Allows public read access and restricts write access to authenticated or anonymous user.
+     * @allow create: if true;
+     * @deny get, list, update, delete: false;
+     * @principle Allows message submissions while restricting access to message content.
      */
     match /messages/{messageId} {
-      allow get, list: if false;  // TODO: Restrict to Bhavesh (admin) only
-      allow create: if true; //TODO: restrict write access to authenticated or anonymous user
-      allow update, delete: if false; // TODO: Implement admin-only write access
+      allow create: if true;
+      allow get, list, update, delete: if false;
     }
   }
 }
