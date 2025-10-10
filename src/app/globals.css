@@ -70,34 +70,3 @@
     @apply bg-background text-foreground font-body;
   }
 }
-
-@layer utilities {
-  .animated-border {
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .animated-border::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    margin: -2px; /* Border width */
-    border-radius: inherit; /* Match parent's border radius */
-    background: conic-gradient(from 180deg at 50% 50%, rgba(187, 222, 251, 0.8) 0deg, rgba(209, 196, 233, 0.8) 60deg, rgba(241, 241, 241, 0.8) 120deg, rgba(248, 181, 0, 0.8) 180deg, rgba(255, 204, 128, 0.8) 240deg, rgba(255, 249, 196, 0.8) 300deg, rgba(187, 222, 251, 0.8) 360deg);
-    animation: rotate-gradient 5s linear infinite;
-  }
-
-  @keyframes rotate-gradient {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-}

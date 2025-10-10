@@ -2,7 +2,7 @@ export default function About() {
   return (
     <section id="about" className="bg-white/30 backdrop-blur-sm py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="relative bg-background/50 backdrop-blur-lg p-8 md:p-12 shadow-2xl rounded-3xl max-w-4xl mx-auto animated-border">
+        <div className="relative bg-background/50 backdrop-blur-lg p-8 md:p-12 shadow-2xl rounded-3xl max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-8">
             ABOUT ME
           </h2>
