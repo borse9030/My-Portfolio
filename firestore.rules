@@ -2,114 +2,94 @@
  * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
  *
  * Core Philosophy:
- * This ruleset provides public read access to portfolio data (projects, skills, contact info, about me)
- * while restricting write access to the website owner. Contact form messages can be created by anyone
- * but are only readable by the owner.  No user-specific data is stored, so ownership is not a factor
- * except for write operations on the core portfolio data.
+ * This ruleset provides public read access to portfolio content (projects, skills, about me, contact info)
+ * while restricting write access to authenticated users or in some cases no access at all, to prevent unauthorized modifications.
+ * Messages from the contact form can be created by anyone.
  *
  * Data Structure:
- * - /projects/{projectId}: Stores project details.
- * - /skills/{skillId}: Stores skill information.
+ * - /projects/{projectId}: Stores individual project details.
+ * - /skills/{skillId}: Stores individual skill details.
  * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores the 'About Me' section content.
- * - /messages/{messageId}: Stores messages submitted through the contact form.
+ * - /aboutMe/{aboutMeId}: Stores "About Me" content.
+ * - /messages/{messageId}: Stores messages submitted via the contact form.
  *
  * Key Security Decisions:
- * - Public read access for all portfolio data (projects, skills, contact info, about me).
- * - Only the owner (defined externally as an admin) can create, update, or delete portfolio data.
- * - Anyone can submit contact form messages (create), but only the owner can read them (get, list).
- * - No user listing is allowed.
- *
- * Denormalization for Authorization:
- *  - There's no explicit owner ID on the documents themselves. Authorization relies on an external
- *    mechanism (e.g., a check in the backend functions) to determine if the user is an admin/owner.
- *
- * Structural Segregation:
- *  - Public portfolio data and private contact form messages are stored in separate collections to
- *    simplify access control.
+ * - Public read access for all portfolio content collections (projects, skills, contactInfo, aboutMe).
+ * - Authenticated write access for portfolio content collections (projects, skills, contactInfo, aboutMe).
+ * - Public write access (create only) for the 'messages' collection.
+ * - No listing of documents in the messages collection.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to projects and restricts write access.
+     * @description Allows public read access to project data. Only authenticated users can create, update, or delete projects.
      * @path /projects/{projectId}
-     * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow (get, list): Any user can read project data.
+     * @allow (create, update, delete): Only authenticated users can modify project data.
+     * @deny (create, update, delete): Unauthenticated users cannot modify project data.
+     * @principle Public read, authenticated write for portfolio content.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Grants public read access to skills and restricts write access.
+     * @description Allows public read access to skill data. Only authenticated users can create, update, or delete skills.
      * @path /skills/{skillId}
-     * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow (get, list): Any user can read skill data.
+     * @allow (create, update, delete): Only authenticated users can modify skill data.
+     * @deny (create, update, delete): Unauthenticated users cannot modify skill data.
+     * @principle Public read, authenticated write for portfolio content.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Grants public read access to contact info and restricts write access.
+     * @description Allows public read access to contact information. Only authenticated users can create, update, or delete contact information.
      * @path /contactInfo/{contactInfoId}
-     * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow (get, list): Any user can read contact information.
+     * @allow (create, update, delete): Only authenticated users can modify contact information.
+     * @deny (create, update, delete): Unauthenticated users cannot modify contact information.
+     * @principle Public read, authenticated write for portfolio content.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Grants public read access to about me and restricts write access.
+     * @description Allows public read access to "About Me" data. Only authenticated users can create, update, or delete "About Me" content.
      * @path /aboutMe/{aboutMeId}
-     * @allow get, list: if true;
-     * @allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny create: if true;
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public read, owner-only writes.
+     * @allow (get, list): Any user can read "About Me" data.
+     * @allow (create, update, delete): Only authenticated users can modify "About Me" data.
+     * @deny (create, update, delete): Unauthenticated users cannot modify "About Me" data.
+     * @principle Public read, authenticated write for portfolio content.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once admin roles are implemented.
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Allows anyone to create messages, but only the owner can read them.
+     * @description Allows anyone to create messages.  Reading and other operations are denied.
      * @path /messages/{messageId}
-     * @allow create: if isSignedIn();
-     * @allow get, list: if false; // TODO: Add owner validation once admin roles are implemented.
-     * @deny update: if true;
-     * @deny delete: if true;
-     * @principle Public creation, owner-only reads.
+     * @allow (create): Any user can create a message.
+     * @deny (get, list, update, delete): No user can read, list, update, or delete messages.
+     * @principle Public writes, owner-only reads (future admin role).
      */
     match /messages/{messageId} {
-      allow create: if isSignedIn();
-      allow get, list: if false; // TODO: Add owner validation once admin roles are implemented.
-      allow update: if false;
-      allow delete: if false;
+      allow get, list: if false;
+      allow create: if true;
+      allow update, delete: if false;
     }
-  }
 
-  function isSignedIn() {
-    return request.auth != null;
+    function isSignedIn() {
+      return request.auth != null;
+    }
   }
 }
