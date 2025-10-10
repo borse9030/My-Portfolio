@@ -4,7 +4,7 @@ import Footer from '@/components/footer';
 import Header from '@/components/header';
 import Hero from '@/components/hero';
 import Projects from '@/components/projects';
-import Services from '@/components/services';
+import Skills from '@/components/skills';
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <About />
-        <Services />
+        <Skills />
         <Projects />
         <Contact />
       </main>
