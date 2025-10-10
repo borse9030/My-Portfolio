@@ -1,89 +1,106 @@
 /**
- * @file Firestore Security Rules for Bhavesh's Portfolio
+ * @file Firebase Security Rules for Bhavesh's portfolio.
  *
- * @core_philosophy This ruleset enforces a public-read, owner-write model for portfolio data (projects, skills, aboutMe, contactInfo).
- *   Contact form messages are writeable by any signed-in or anonymous user, but are only readable by the admin.
+ * @core_philosophy This ruleset enforces a public-read, owner-write model for portfolio data (projects, skills, contact info, about me).
+ *   Messages are publicly writable but only readable by the owner.  Schema validation is minimized for rapid prototyping.
  *
- * @data_structure The database consists of top-level collections for each data entity:
- *   /projects/{projectId}
- *   /skills/{skillId}
- *   /contactInfo/{contactInfoId}
- *   /aboutMe/{aboutMeId}
- *   /messages/{messageId}
+ * @data_structure The Firestore database is structured with top-level collections for 'projects', 'skills', 'contactInfo', 'aboutMe', and 'messages'.
+ *   Each collection contains documents representing individual entities.
  *
  * @key_security_decisions
- *   - All collections are publicly readable to allow display on the website.
- *   - Only the admin can modify projects, skills, aboutMe, and contactInfo.  This is enforced by denying all write operations for non-authenticated users.
- *   - Any signed-in or anonymous user can create new messages. Only the admin can read messages.
- *   - No user listing is allowed.
+ *   - Public read access for 'projects', 'skills', 'contactInfo', and 'aboutMe' to allow anyone to view the portfolio.
+ *   - Only the owner (Bhavesh) will eventually have write access to 'projects', 'skills', 'contactInfo', and 'aboutMe'.
+ *   - Any authenticated or anonymous user can submit a message through the contact form ('messages').
+ *   - Only Bhavesh (as an admin) will eventually have read access to the 'messages' collection.
+ *   - Strict separation of read and write permissions to prevent unintended data modification.
+ *
+ * @denormalization_for_authorization Not applicable in this version.  Future versions may denormalize ownership data for simpler rules.
+ * @structural_segregation Not applicable in this version.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Secure the /projects collection. Anyone can read the list of projects. Only the admin can add, modify, or delete projects.
+     * @description Allows public read access and owner-only write access to the 'projects' collection.
      * @path /projects/{projectId}
-     * @allow (get, list): Anyone can read project data to display the portfolio.
-     * @allow (create, update, delete): Only the admin can modify project data.
-     * @deny (create): A non-admin user attempts to create a project.
-     * @principle Public read, admin-only write.
+     * @allow (get, list) Allow anyone to read project data.
+     * @allow (create) Deny anyone to create project data. Owner-only writes will be implemented later.
+     * @deny (create) Deny anyone to create project data.
+     * @principle Enforces public read access with restricted write access for projects.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Secure the /skills collection. Anyone can read the list of skills. Only the admin can add, modify, or delete skills.
+     * @description Allows public read access and owner-only write access to the 'skills' collection.
      * @path /skills/{skillId}
-     * @allow (get, list): Anyone can read skill data to display the portfolio.
-     * @allow (create, update, delete): Only the admin can modify skill data.
-     * @deny (create): A non-admin user attempts to create a skill.
-     * @principle Public read, admin-only write.
+     * @allow (get, list) Allow anyone to read skill data.
+     * @allow (create) Deny anyone to create skill data. Owner-only writes will be implemented later.
+     * @deny (create) Deny anyone to create skill data.
+     * @principle Enforces public read access with restricted write access for skills.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Secure the /contactInfo collection. Anyone can read the contact info. Only the admin can add, modify, or delete contact info.
+     * @description Allows public read access and owner-only write access to the 'contactInfo' collection.
      * @path /contactInfo/{contactInfoId}
-     * @allow (get, list): Anyone can read contact info to display it.
-     * @allow (create, update, delete): Only the admin can modify contact info.
-     * @deny (create): A non-admin user attempts to create contact info.
-     * @principle Public read, admin-only write.
+     * @allow (get, list) Allow anyone to read contact info.
+     * @allow (create) Deny anyone to create contact info. Owner-only writes will be implemented later.
+     * @deny (create) Deny anyone to create contact info.
+     * @principle Enforces public read access with restricted write access for contact info.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Secure the /aboutMe collection. Anyone can read the about me section. Only the admin can add, modify, or delete it.
+     * @description Allows public read access and owner-only write access to the 'aboutMe' collection.
      * @path /aboutMe/{aboutMeId}
-     * @allow (get, list): Anyone can read the About Me section.
-     * @allow (create, update, delete): Only the admin can modify the About Me section.
-     * @deny (create): A non-admin user attempts to create the About Me section.
-     * @principle Public read, admin-only write.
+     * @allow (get, list) Allow anyone to read about me data.
+     * @allow (create) Deny anyone to create about me data. Owner-only writes will be implemented later.
+     * @deny (create) Deny anyone to create about me data.
+     * @principle Enforces public read access with restricted write access for about me data.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create, update, delete: if isSignedIn();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Secure the /messages collection. Anyone can create messages. Only the admin can read or delete them.
+     * @description Allows any authenticated or anonymous user to create messages, but restricts read access.
      * @path /messages/{messageId}
-     * @allow (create): Any signed-in or anonymous user can send a message.
-     * @allow (get, list, delete): Only the admin can read/delete messages.
-     * @deny (get, list): A non-admin user attempts to read/list messages.
-     * @principle Public write, admin-only read/delete.
+     * @allow (create) Allow any signed-in user to create messages.
+     * @deny (get, list, update, delete) Deny anyone to read, update or delete messages.
+     * @principle Enforces public write access with restricted read access for messages.
      */
     match /messages/{messageId} {
-      allow create: if true;
-      allow get, list, delete: if isSignedIn();
+      allow create: if isSignedIn();
+      allow get, list: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Placeholder rule to protect against open read/write access.
+     * @path /
+     */
+    match /{path=**} {
+        allow read, write: if false;
     }
   }
 

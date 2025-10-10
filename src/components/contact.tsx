@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { Code, Linkedin } from 'lucide-react';
 import SafeClient from "./safe-client";
-import { useFirestore } from "@/firebase";
+import { useFirestore, useUser } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
 
@@ -29,6 +29,7 @@ const socialLinks = [
 export default function Contact() {
   const { toast } = useToast();
   const firestore = useFirestore();
+  const { user } = useUser();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,15 +40,25 @@ export default function Contact() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Error",
+        description: "You must be signed in to send a message. Please wait a moment and try again.",
+      });
+      return;
+    }
+
     const messagesCollection = collection(firestore, 'messages');
     addDocumentNonBlocking(messagesCollection, {
       ...values,
+      userId: user.uid, // Add the user's ID to the message
       createdAt: serverTimestamp(),
     });
 
     toast({
       title: "Message Sent!",
-      description: "Thanks for reaching out. Your message has been saved.",
+      description: "Thanks for reaching out. Your message has been saved and will appear in the analysis section.",
     });
     form.reset();
   }

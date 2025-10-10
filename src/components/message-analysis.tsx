@@ -3,7 +3,7 @@
 import { useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useCollection, useFirestore, useMemoFirebase, useAuth, useUser } from '@/firebase';
-import { collection, orderBy, query } from 'firebase/firestore';
+import { collection, orderBy, query, where } from 'firebase/firestore';
 import { WithId } from '@/firebase/firestore/use-collection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { signInAnonymously } from 'firebase/auth';
@@ -12,6 +12,7 @@ interface Message {
   name: string;
   email: string;
   message: string;
+  userId: string;
   createdAt: {
     seconds: number;
     nanoseconds: number;
@@ -53,8 +54,12 @@ export default function MessageAnalysis() {
   }, [auth, user, isUserLoading]);
 
   const messagesQuery = useMemoFirebase(() => {
-    if (!firestore || !user) return null; // Only query if user is authenticated
-    return query(collection(firestore, 'messages'), orderBy('createdAt', 'desc'));
+    if (!firestore || !user) return null;
+    return query(
+      collection(firestore, 'messages'),
+      where('userId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
   }, [firestore, user]);
 
   const { data: messages, isLoading } = useCollection<Message>(messagesQuery);
@@ -66,7 +71,7 @@ export default function MessageAnalysis() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="relative bg-white/10 backdrop-blur-md p-8 md:p-12 shadow-2xl rounded-3xl max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-8 uppercase">
-            Message Analysis
+            Your Submitted Messages
           </h2>
           <div className="space-y-4 min-h-[200px]">
             {showLoadingState && (
@@ -82,7 +87,7 @@ export default function MessageAnalysis() {
             {!showLoadingState && (!messages || messages.length === 0) && (
               <div className="border-2 border-dashed border-gray-400/50 rounded-2xl min-h-[200px] flex items-center justify-center p-8">
                 <p className="text-foreground/60 font-bold uppercase tracking-wider">
-                  Submitted messages will appear here.
+                  Your submitted messages will appear here.
                 </p>
               </div>
             )}
