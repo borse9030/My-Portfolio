@@ -43,7 +43,7 @@ export default function Hero() {
             <div className="relative w-[400px] h-[400px]">
               <div className="absolute inset-0 bg-pink-300/50 rounded-full animate-pulse-slow" />
               <Image
-                src="/image.png"
+                src="/IMG_20250902_175543_746.webp"
                 alt="Profile picture of Bhavesh for the hero section."
                 width={400}
                 height={400}
