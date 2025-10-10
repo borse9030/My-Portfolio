@@ -29,7 +29,7 @@ export default function Achievements() {
   const achievementImages = PlaceHolderImages.filter(p => p.id.startsWith('achievement-'));
 
   return (
-    <section id="achievements" className="py-16 md:py-24 bg-white/10">
+    <section id="achievements" className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">
           ACHIEVEMENTS & CERTIFICATES
@@ -38,7 +38,7 @@ export default function Achievements() {
           {achievements.map((achievement) => {
             const image = achievementImages.find(img => img.id === achievement.id);
             return (
-              <Card key={achievement.id} className="bg-white/40 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden">
+              <Card key={achievement.id} className="bg-card/40 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden">
                 <CardContent className="p-6 text-center">
                   <div className="relative mb-4 h-56 w-full border-4 border-white rounded-lg overflow-hidden">
                     {image && (

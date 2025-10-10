@@ -44,11 +44,11 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-white/30 backdrop-blur-sm">
+    <section id="contact" className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12 uppercase">Get In Touch</h2>
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          <Card className="bg-white/40 backdrop-blur-md shadow-2xl rounded-3xl">
+          <Card className="bg-card/40 backdrop-blur-md shadow-2xl rounded-3xl">
             <CardContent className="p-8 md:p-12 space-y-6 flex flex-col justify-center h-full">
               <div>
                 <h3 className="text-xl font-headline font-bold uppercase mb-4">Contact Me</h3>
@@ -64,7 +64,7 @@ export default function Contact() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/40 backdrop-blur-md shadow-2xl rounded-3xl">
+          <Card className="bg-card/40 backdrop-blur-md shadow-2xl rounded-3xl">
             <CardContent className="p-8 md:p-12">
               <h3 className="text-xl font-headline font-bold uppercase mb-2">Contact Form</h3>
               <p className="text-foreground/80 font-bold uppercase text-sm mb-6">Fill out the form to send me a message.</p>

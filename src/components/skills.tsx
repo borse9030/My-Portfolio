@@ -51,7 +51,7 @@ export default function Skills() {
           {skills.map((skillCategory) => (
             <Card
               key={skillCategory.category}
-              className="bg-white/30 backdrop-blur-sm p-6 shadow-lg rounded-2xl transform transition-transform duration-300 hover:-translate-y-2"
+              className="bg-card/30 backdrop-blur-sm p-6 shadow-lg rounded-2xl transform transition-transform duration-300 hover:-translate-y-2"
             >
               <h3 className="text-center font-headline font-bold text-xl mb-6">
                 {skillCategory.category}

@@ -61,8 +61,8 @@ export default function Projects() {
               onClick={() => setActiveFilter(filter)}
               className={`rounded-full px-6 py-2 text-sm font-bold transition-all duration-300 ${
                 activeFilter === filter
-                  ? 'bg-white text-black shadow-lg'
-                  : 'bg-white/40 text-black/70 border-white/50 hover:bg-white/80'
+                  ? 'bg-primary text-primary-foreground shadow-lg'
+                  : 'bg-card/40 text-foreground/70 border-border/50 hover:bg-card/80'
               }`}
             >
               {filter}
@@ -73,7 +73,7 @@ export default function Projects() {
           {filteredProjects.map((project) => {
             const image = projectImages.find(img => img.id === project.id);
             return (
-              <Card key={project.id} className="bg-white/40 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+              <Card key={project.id} className="bg-card/40 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="relative mb-4 h-48 w-full">
                     {image && (
@@ -96,10 +96,10 @@ export default function Projects() {
                     ))}
                   </div>
                   <div className="flex justify-center gap-4">
-                    <Button asChild variant="default" className="bg-white text-black font-bold rounded-full hover:bg-gray-200 shadow-md">
+                    <Button asChild variant="default" className="bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/80 shadow-md">
                       <a href={project.github} target="_blank" rel="noopener noreferrer">GITHUB</a>
                     </Button>
-                    <Button asChild variant="default" className="bg-white text-black font-bold rounded-full hover:bg-gray-200 shadow-md">
+                    <Button asChild variant="default" className="bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/80 shadow-md">
                       <a href={project.demo} target="_blank" rel="noopener noreferrer">LIVE DEMO</a>
                     </Button>
                   </div>
