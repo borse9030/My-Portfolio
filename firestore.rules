@@ -1,113 +1,74 @@
 /**
- * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
- *
- * Core Philosophy:
- * This ruleset provides public read access to portfolio content (projects, skills, about me, contact info)
- * while restricting write access to the website owner.  Contact form submissions ("messages")
- * are publicly writeable (create only) but not readable except by the owner (future admin).
- *
- * Data Structure:
- * - /projects/{projectId}: Stores individual project details.
- * - /skills/{skillId}: Stores individual skill details.
- * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores "About Me" section content.
- * - /messages/{messageId}: Stores contact form submissions.
- *
- * Key Security Decisions:
- * - Public read access is granted to projects, skills, contact info, and about me sections.
- * - Only authenticated users can submit contact form messages.
- * - Listing messages is denied to all users, based on the provided error report and the
- *   reasoning in `backend.json`.
+ * @file Firebase Security Rules for Bhavesh's Portfolio
+ * @core_philosophy This ruleset prioritizes ease of data access for the portfolio website while ensuring that only the website owner can modify certain data.
+ * @data_structure The database consists of top-level collections for 'projects', 'skills', 'contactInfo', 'aboutMe', and 'messages'. Each collection contains documents representing individual entities.
+ * @key_security_decisions
+ *  - Projects, skills, contactInfo, and aboutMe can be read publicly but only modified by the owner (not yet implemented, defaults to no one).
+ *  - Messages can be created by any authenticated or unauthenticated user.
+ *  - Listing of messages is denied to everyone in this initial version, as it's intended to be accessed via a dedicated admin dashboard (not implemented).
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to projects and restricts write access.
+     * @description Controls access to the 'projects' collection. Allows public read access but restricts write access.
      * @path /projects/{projectId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) Any user can read the project details.
+     * @deny (create, update, delete) No user can modify project details in this version.
+     * @principle Public read, owner-only write (not yet implemented).
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to skills and restricts write access.
+     * @description Controls access to the 'skills' collection. Allows public read access but restricts write access.
      * @path /skills/{skillId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) Any user can read the skill details.
+     * @deny (create, update, delete) No user can modify skill details in this version.
+     * @principle Public read, owner-only write (not yet implemented).
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to contact info and restricts write access.
+     * @description Controls access to the 'contactInfo' collection. Allows public read access but restricts write access.
      * @path /contactInfo/{contactInfoId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) Any user can read the contact information.
+     * @deny (create, update, delete) No user can modify contact information in this version.
+     * @principle Public read, owner-only write (not yet implemented).
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Grants public read access to about me section and restricts write access.
+     * @description Controls access to the 'aboutMe' collection. Allows public read access but restricts write access.
      * @path /aboutMe/{aboutMeId}
-     * @allow get, list: if true;
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public read, owner-only writes (not yet implemented, requires owner ID field).
+     * @allow (get, list) Any user can read the 'About Me' section.
+     * @deny (create, update, delete) No user can modify the 'About Me' section in this version.
+     * @principle Public read, owner-only write (not yet implemented).
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Allows any authenticated user to create a message, but restricts reading.
+     * @description Controls access to the 'messages' collection. Allows any user (authenticated or unauthenticated) to create messages, but restricts all other access.
      * @path /messages/{messageId}
-     * @allow get: if false;
-     * @allow list: if false;
-     * @allow create: if isSignedIn();
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @principle Public write (create only), no read access (except future admin).
+     * @allow (create) Any user can create a message.
+     * @deny (get, list, update, delete) No user can read, list, update or delete messages in this version.
+     * @principle Public write for message creation, restricted access otherwise.
      */
     match /messages/{messageId} {
-      allow get: if false;
-      allow list: if false;
-      allow create: if isSignedIn();
-      allow update: if false;
-      allow delete: if false;
+      allow create: if true;
+      allow get, list, update, delete: if false;
     }
-  }
-
-  // Helper function to determine if a user is signed in.
-  function isSignedIn() {
-    return request.auth != null;
   }
 }
