@@ -39,20 +39,20 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative flex justify-center items-center">
-          {heroImage && (
+          
             <div className="relative w-[400px] h-[400px]">
-              <div className="absolute inset-0 bg-primary rounded-full" />
+              <div className="absolute inset-0 bg-pink-300/50 rounded-full animate-pulse-slow" />
               <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
+                src="/image.png"
+                alt="Profile picture of Bhavesh for the hero section."
                 width={400}
                 height={400}
-                className="rounded-full object-cover z-10 relative"
+                className="rounded-full object-cover z-10 relative p-1 bg-background"
                 priority
-                data-ai-hint={heroImage.imageHint}
+                data-ai-hint="man portrait"
               />
             </div>
-          )}
+          
         </div>
       </div>
     </section>

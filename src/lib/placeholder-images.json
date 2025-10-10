@@ -3,8 +3,8 @@
     {
       "id": "hero-profile",
       "description": "Profile picture of Bhavesh for the hero section.",
-      "imageUrl": "https://picsum.photos/seed/sopan-hero/400/400",
-      "imageHint": "man sunglasses portrait"
+      "imageUrl": "/sopan.jpg",
+      "imageHint": "man portrait"
     },
     {
       "id": "about-profile",
@@ -34,7 +34,7 @@
       "id": "project-4",
       "description": "Screenshot of Project Four.",
       "imageUrl": "https://picsum.photos/seed/project4/500/300",
-      "imageHint": "ecommerce website"
+      "imageHint": "portfolio builder"
     }
   ]
 }
