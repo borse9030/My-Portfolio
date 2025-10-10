@@ -28,6 +28,11 @@ const achievements = [
     id: 'achievement-5',
     title: 'HP LIFE Data Science & Analytics',
     description: 'Completed the HP LIFE online course on Data Science & Analytics, learning about leading practices, methodologies, and tools.',
+  },
+  {
+    id: 'achievement-6',
+    title: 'Advanced AI Job Simulation',
+    description: 'Mastered advanced AI concepts, including deep learning, neural networks, and developing complex AI-driven solutions.',
   }
 ];
 
