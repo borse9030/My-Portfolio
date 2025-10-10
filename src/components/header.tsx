@@ -28,22 +28,12 @@ const LogoIcon = () => (
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
     e.preventDefault();
     const targetElement = document.querySelector(href);
     if (targetElement) {
-        const headerOffset = 80; // height of the header
+        const headerOffset = 20; // Extra space from top
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -56,40 +46,26 @@ export default function Header() {
   };
 
   return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/10 backdrop-blur-lg shadow-lg border-b border-white/30' : 'bg-transparent'}`}>
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Link href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="flex items-center gap-2 text-2xl font-bold font-headline text-black">
+    <header className='fixed top-0 w-full z-50 flex justify-center'>
+      <div className="md:hidden container mx-auto flex h-20 items-center justify-between px-4 md:px-6 absolute top-0 w-full">
+         <Link href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="flex items-center gap-2 text-2xl font-bold font-headline text-black">
           <div className="w-8 h-8 p-1.5 bg-black text-white rounded-full flex items-center justify-center">
             <SafeClient>
               <LogoIcon />
             </SafeClient>
           </div>
-          <span>PORTFOLIO</span>
+          <span className='hidden sm:inline'>PORTFOLIO</span>
         </Link>
-        <nav className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-sm font-semibold text-black/80 hover:text-black transition-colors">
-                {link.label}
-            </Link>
-          ))}
-          <div className="flex items-center gap-4">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-black/80 hover:text-black">
-              <Code className="w-6 h-6" />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-black/80 hover:text-black">
-              <Linkedin className="w-6 h-6" />
-            </a>
-          </div>
-        </nav>
         <div className="md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-white/30 backdrop-blur-sm">
             {isMenuOpen ? <X className="h-6 w-6 text-black" /> : <Menu className="h-6 w-6 text-black" />}
           </Button>
         </div>
       </div>
+      
       {isMenuOpen && (
-        <div className="md:hidden bg-white/80 backdrop-blur-sm">
-          <nav className="flex flex-col items-center space-y-4 py-4">
+        <div className="md:hidden bg-white/90 backdrop-blur-lg w-full mt-20 shadow-xl animate-slide-down-fast">
+          <nav className="flex flex-col items-center space-y-4 py-6">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-lg font-medium text-black/80 hover:text-black transition-colors">
                   {link.label}
@@ -106,6 +82,14 @@ export default function Header() {
           </nav>
         </div>
       )}
+
+      <nav className="hidden md:flex items-center space-x-1 bg-black/80 backdrop-blur-lg text-white rounded-full px-4 py-2 mt-4 shadow-2xl animate-slide-down">
+        {navLinks.map((link) => (
+          <Link key={link.href} href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-xs font-semibold uppercase px-3 py-2 rounded-full hover:bg-white/20 transition-colors">
+              {link.label}
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }
