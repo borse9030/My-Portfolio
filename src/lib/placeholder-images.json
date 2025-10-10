@@ -16,19 +16,19 @@
       "id": "project-1",
       "description": "AI Chatbot Beta Project Image",
       "imageUrl": "https://picsum.photos/seed/ai-chatbot/500/300",
-      "imageHint": "ai concept"
+      "imageHint": "ai chatbot"
     },
     {
       "id": "project-2",
-      "description": "E-commerce Platform Project Image",
-      "imageUrl": "https://picsum.photos/seed/ecommerce-platform/500/300",
-      "imageHint": "food groceries"
+      "description": "Object Detection Project Image",
+      "imageUrl": "https://picsum.photos/seed/object-detection/500/300",
+      "imageHint": "object detection"
     },
     {
       "id": "project-3",
-      "description": "Image Recognition API Project Image",
-      "imageUrl": "https://picsum.photos/seed/image-recognition/500/300",
-      "imageHint": "brain technology"
+      "description": "Face Recognition Attendance Project Image",
+      "imageUrl": "https://picsum.photos/seed/face-recognition/500/300",
+      "imageHint": "face recognition"
     },
     {
       "id": "project-4",

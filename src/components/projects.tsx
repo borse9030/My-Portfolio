@@ -9,6 +9,15 @@ import { Badge } from '@/components/ui/badge';
 
 const allProjects = [
   { 
+    id: 'project-1',
+    title: 'AI Chatbot Beta',
+    description: 'A conversational AI chatbot built with advanced natural language processing and machine learning models.',
+    tags: ['AI', 'Next.js', 'Genkit'],
+    category: 'AI',
+    github: 'https://github.com/borse9030',
+    demo: '#'
+  },
+  { 
     id: 'project-2', 
     title: 'Object Detection', 
     description: 'An object detection model using TensorFlow to identify and classify various objects within images.',
