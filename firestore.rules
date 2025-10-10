@@ -1,81 +1,110 @@
 /**
- * @fileOverview Firestore Security Rules for Bhavesh's portfolio.
+ * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
  *
  * Core Philosophy:
- * This ruleset provides public read access to all data (projects, skills, contact info, about me)
- * to allow anyone to view the portfolio.  Write access is denied to everyone, simulating
- * a read-only database for the portfolio's data in this prototyping phase. In a production
- * environment, write access would be restricted to the portfolio owner (Bhavesh).
+ * This ruleset provides a baseline secure configuration for a portfolio application.
+ * All data collections are publicly readable to allow for easy display of the portfolio content.
+ * Write access to the core portfolio content (projects, skills, aboutMe, contactInfo) is completely disabled as this is a static portfolio.
+ * Only the `messages` collection allows writes from any signed-in user, enabling the contact form functionality.
+ * Listing the `messages` collection is disallowed for all users, including authenticated ones, as it should only be accessible via backend processes.
  *
  * Data Structure:
- * - /projects/{projectId}: Stores individual project details.
- * - /skills/{skillId}: Stores individual skill details.
- * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores the 'About Me' content.
+ * - /projects/{projectId}: Stores project details. Publicly readable.
+ * - /skills/{skillId}: Stores skill information. Publicly readable.
+ * - /contactInfo/{contactInfoId}: Stores contact information. Publicly readable.
+ * - /aboutMe/{aboutMeId}: Stores "About Me" content. Publicly readable.
+ * - /messages/{messageId}: Stores contact form submissions.  Writeable by any signed-in user, non-listable.
  *
  * Key Security Decisions:
- * - Public read access for all collections.
- * - No write access for anyone (simulating a read-only setup).
- * - No user listing is possible.
+ * - Write access to `/projects`, `/skills`, `/contactInfo`, and `/aboutMe` is explicitly denied to all users.  This ensures only backend processes can modify core portfolio content.
+ * - Listing of `/messages` is denied to prevent unauthorized access to contact form data.
+ * - No user roles or complex access controls are implemented, as the portfolio is designed for primarily read-only access by the public.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows anyone to read project data.  Write access is denied.
+     * @description Allows anyone to read projects. Writes are disallowed.
      * @path /projects/{projectId}
-     * @allow (get, list) - Any user can read project data.
-     * @deny (create, update, delete) - No one can modify project data.
-     * @principle Allows public read access while restricting write access.
+     * @allow get, list: if true;
+     * @deny create, update, delete: if false;
+     * @principle Grants public read access while preventing unauthorized data modification.
      */
     match /projects/{projectId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows anyone to read skill data. Write access is denied.
+     * @description Allows anyone to read skills. Writes are disallowed.
      * @path /skills/{skillId}
-     * @allow (get, list) - Any user can read skill data.
-     * @deny (create, update, delete) - No one can modify skill data.
-     * @principle Allows public read access while restricting write access.
+     * @allow get, list: if true;
+     * @deny create, update, delete: if false;
+     * @principle Grants public read access while preventing unauthorized data modification.
      */
     match /skills/{skillId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows anyone to read contact information. Write access is denied.
+     * @description Allows anyone to read contact info. Writes are disallowed.
      * @path /contactInfo/{contactInfoId}
-     * @allow (get, list) - Any user can read contact information.
-     * @deny (create, update, delete) - No one can modify contact information.
-     * @principle Allows public read access while restricting write access.
+     * @allow get, list: if true;
+     * @deny create, update, delete: if false;
+     * @principle Grants public read access while preventing unauthorized data modification.
      */
     match /contactInfo/{contactInfoId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows anyone to read the 'About Me' section. Write access is denied.
+     * @description Allows anyone to read about me section. Writes are disallowed.
      * @path /aboutMe/{aboutMeId}
-     * @allow (get, list) - Any user can read the 'About Me' section.
-     * @deny (create, update, delete) - No one can modify the 'About Me' section.
-     * @principle Allows public read access while restricting write access.
+     * @allow get, list: if true;
+     * @deny create, update, delete: if false;
+     * @principle Grants public read access while preventing unauthorized data modification.
      */
     match /aboutMe/{aboutMeId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
+
+    /**
+     * @description Allows any signed-in user to create messages. Reading and listing messages are disallowed.
+     * @path /messages/{messageId}
+     * @allow create: if isSignedIn();
+     * @deny get, list, update, delete: if false;
+     * @principle Restricts message access to create-only for all signed-in users, preventing unauthorized data retrieval.
+     */
+    match /messages/{messageId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+
+  /**
+   * @description Checks if the user is signed in.
+   * @return {bool} True if the user is signed in, false otherwise.
+   */
+  function isSignedIn() {
+    return request.auth != null;
   }
 }
