@@ -6,10 +6,10 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Code, Linkedin } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -17,10 +17,9 @@ const formSchema = z.object({
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 });
 
-const contactInfo = [
-    { icon: Mail, text: "bhavesh@example.com", href: "mailto:bhavesh@example.com" },
-    { icon: Phone, text: "+1 (123) 456-7890", href: "tel:+11234567890" },
-    { icon: MapPin, text: "Mumbai, India", href: "#" },
+const socialLinks = [
+    { icon: Code, href: 'https://github.com', 'aria-label': 'Code' },
+    { icon: Linkedin, href: 'https://linkedin.com', 'aria-label': 'LinkedIn' },
 ];
 
 export default function Contact() {
@@ -46,22 +45,28 @@ export default function Contact() {
   return (
     <section id="contact" className="py-16 md:py-24 bg-white/30 backdrop-blur-sm">
       <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Contact Me</h2>
-        <div className="grid md:grid-cols-2 gap-12">
-          <div className="space-y-6">
-             <h3 className="text-2xl font-headline font-semibold">Get in Touch</h3>
-             <p className="text-muted-foreground">I'm currently available for freelance work and open to new opportunities. Feel free to reach out to me.</p>
-             <div className="space-y-4">
-                {contactInfo.map((info, index) => (
-                    <a key={index} href={info.href} className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
-                        <info.icon className="w-6 h-6 text-primary" />
-                        <span>{info.text}</span>
-                    </a>
-                ))}
-             </div>
-          </div>
-          <div>
-            <Card className="p-6 md:p-8 bg-card rounded-none">
+        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12 uppercase">Get In Touch</h2>
+        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <Card className="bg-white/40 backdrop-blur-md shadow-2xl rounded-3xl">
+            <CardContent className="p-8 md:p-12 space-y-6 flex flex-col justify-center h-full">
+              <div>
+                <h3 className="text-xl font-headline font-bold uppercase mb-4">Contact Me</h3>
+                <p className="text-foreground/80 font-bold uppercase text-sm leading-relaxed">I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Feel free to reach out to me.</p>
+              </div>
+              <div className="flex items-center space-x-6 pt-4">
+                  {socialLinks.map((link, index) => (
+                      <a key={index} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link['aria-label']} className="text-foreground/80 hover:text-foreground transition-colors">
+                          <link.icon className="w-8 h-8" />
+                      </a>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/40 backdrop-blur-md shadow-2xl rounded-3xl">
+            <CardContent className="p-8 md:p-12">
+              <h3 className="text-xl font-headline font-bold uppercase mb-2">Contact Form</h3>
+              <p className="text-foreground/80 font-bold uppercase text-sm mb-6">Fill out the form to send me a message.</p>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
@@ -69,9 +74,9 @@ export default function Contact() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel className="font-headline font-bold uppercase">Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Your Name" {...field} />
+                          <Input placeholder="Your Name" {...field} className="bg-gray-200/80 border-0 placeholder:text-gray-500 font-bold" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -82,9 +87,9 @@ export default function Contact() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel className="font-headline font-bold uppercase">Email</FormLabel>
                         <FormControl>
-                          <Input type="email" placeholder="Your Email" {...field} />
+                          <Input type="email" placeholder="your.email@example.com" {...field} className="bg-gray-200/80 border-0 placeholder:text-gray-500 font-bold"/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -95,19 +100,19 @@ export default function Contact() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Message</FormLabel>
+                        <FormLabel className="font-headline font-bold uppercase">Message</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Your Message" rows={5} {...field} />
+                          <Textarea placeholder="Your Message..." rows={4} {...field} className="bg-gray-200/80 border-0 placeholder:text-gray-500 font-bold" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full" size="lg">Send Message</Button>
+                  <Button type="submit" className="w-full bg-primary text-primary-foreground font-headline text-lg rounded-lg hover:bg-primary/90" size="lg">Send Message</Button>
                 </form>
               </Form>
-            </Card>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
