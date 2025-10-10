@@ -33,7 +33,7 @@ const allProjects = [
     tags: ['Web', 'E-commerce'],
     category: 'Web',
     github: 'https://github.com/borse9030/babizz-drink-project',
-    demo: '#'
+    demo: 'https://bhaveshdrinks.netlify.app/'
   }
 ];
 
