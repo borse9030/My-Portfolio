@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Linkedin, Code } from 'lucide-react';
 import SafeClient from '@/components/safe-client';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
+  { href: '#home', label: 'HOME' },
   { href: '#about', label: 'ABOUT' },
   { href: '#skills', label: 'SKILLS' },
   { href: '#projects', label: 'PROJECTS' },
@@ -28,12 +30,13 @@ const LogoIcon = () => (
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState('#home');
   
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
     e.preventDefault();
     const targetElement = document.querySelector(href);
     if (targetElement) {
-        const headerOffset = 20; // Extra space from top
+        const headerOffset = 80; // Extra space from top
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -44,6 +47,28 @@ export default function Header() {
     }
     setIsMenuOpen(false);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = navLinks.map(link => document.querySelector(link.href));
+      const scrollPosition = window.scrollY + 150;
+
+      sections.forEach(section => {
+        if (section) {
+          const htmlSection = section as HTMLElement;
+          if (
+            htmlSection.offsetTop <= scrollPosition &&
+            htmlSection.offsetTop + htmlSection.offsetHeight > scrollPosition
+          ) {
+            setActiveLink(`#${htmlSection.id}`);
+          }
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header className='fixed top-0 w-full z-50 flex justify-center'>
@@ -85,7 +110,15 @@ export default function Header() {
 
       <nav className="hidden md:flex items-center space-x-1 bg-black/80 backdrop-blur-lg text-white rounded-full px-4 py-2 mt-4 shadow-2xl animate-slide-down">
         {navLinks.map((link) => (
-          <Link key={link.href} href={link.href} onClick={(e) => handleLinkClick(e, link.href)} className="text-xs font-semibold uppercase px-3 py-2 rounded-full hover:bg-white/20 transition-colors">
+          <Link 
+              key={link.href} 
+              href={link.href} 
+              onClick={(e) => handleLinkClick(e, link.href)} 
+              className={cn(
+                "text-xs font-semibold uppercase px-4 py-2 rounded-full transition-colors duration-300",
+                activeLink === link.href ? "bg-white text-black" : "hover:bg-white/20"
+              )}
+          >
               {link.label}
           </Link>
         ))}
