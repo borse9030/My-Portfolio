@@ -10,29 +10,29 @@ import { Badge } from '@/components/ui/badge';
 const allProjects = [
   { 
     id: 'project-1', 
-    title: 'AI Chatbot Beta', 
-    description: 'A research project exploring natural language understanding with a custom-trained chatbot model.', 
-    tags: ['Genkit', 'Gemini', 'React'],
-    category: 'AI',
-    github: '#',
+    title: 'Lets-Chat', 
+    description: 'A real-time chat application built with modern HTML, CSS, and JavaScript, enabling instant messaging between users.', 
+    tags: ['HTML', 'CSS', 'JavaScript'],
+    category: 'Web',
+    github: 'https://github.com/borse9030/Lets-Chat',
     demo: '#'
   },
   { 
     id: 'project-2', 
-    title: 'E-commerce Platform', 
-    description: 'A full-stack e-commerce website with features like product catalog, shopping cart, and user authentication.',
-    tags: ['Next.js', 'Tailwind CSS', 'Firebase'],
-    category: 'Web',
-    github: '#',
+    title: 'Object Detection', 
+    description: 'An object detection model using TensorFlow to identify and classify various objects within images.',
+    tags: ['Python', 'TensorFlow', 'AI'],
+    category: 'AI',
+    github: 'https://github.com/borse9030/Object-Detection',
     demo: '#'
   },
   { 
     id: 'project-3', 
-    title: 'Image Recognition API', 
-    description: 'A deep learning model trained to identify objects in images, exposed via a REST API.',
-    tags: ['Python', 'TensorFlow', 'Flask'],
+    title: 'Face Recognition Attendance', 
+    description: 'An automated attendance system that uses facial recognition to identify individuals and mark their presence.',
+    tags: ['Python', 'OpenCV', 'AI'],
     category: 'AI',
-    github: '#',
+    github: 'https://github.com/borse9030/Face-Recognition-Based-Attendance-System',
     demo: '#'
   },
 ];
@@ -73,7 +73,7 @@ export default function Projects() {
           {filteredProjects.map((project) => {
             const image = projectImages.find(img => img.id === project.id);
             return (
-              <Card key={project.id} className="bg-white/10 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+              <Card key={project.id} className="bg-background/50 backdrop-blur-lg shadow-2xl rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="relative mb-4 h-48 w-full">
                     {image && (
