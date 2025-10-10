@@ -9,15 +9,6 @@ import { Badge } from '@/components/ui/badge';
 
 const allProjects = [
   { 
-    id: 'project-1', 
-    title: 'Lets-Chat', 
-    description: 'A real-time chat application built with modern HTML, CSS, and JavaScript, enabling instant messaging between users.', 
-    tags: ['HTML', 'CSS', 'JavaScript'],
-    category: 'Web',
-    github: 'https://github.com/borse9030/Lets-Chat',
-    demo: '#'
-  },
-  { 
     id: 'project-2', 
     title: 'Object Detection', 
     description: 'An object detection model using TensorFlow to identify and classify various objects within images.',
