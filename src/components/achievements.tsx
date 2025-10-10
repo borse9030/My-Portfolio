@@ -24,6 +24,11 @@ const achievements = [
     title: 'Data Analytics Job Simulation - Deloitte (via Forage)',
     description: 'Completed the Deloitte Data Analytics Job Simulation on Forage, gaining practical knowledge in data analysis and forensic technology applications.',
   },
+  {
+    id: 'achievement-5',
+    title: 'HP LIFE Data Science & Analytics',
+    description: 'Completed the HP LIFE online course on Data Science & Analytics, learning about leading practices, methodologies, and tools.',
+  }
 ];
 
 export default function Achievements() {

@@ -53,6 +53,12 @@
       "description": "Data Analytics Job Simulation Certificate",
       "imageUrl": "https://picsum.photos/seed/cert4/600/400",
       "imageHint": "certificate data"
+    },
+    {
+      "id": "achievement-5",
+      "description": "HP LIFE Data Science & Analytics Certificate",
+      "imageUrl": "https://picsum.photos/seed/cert5/600/400",
+      "imageHint": "certificate science"
     }
   ]
 }
