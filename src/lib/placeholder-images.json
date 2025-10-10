@@ -29,6 +29,30 @@
       "description": "Image Recognition API Project Image",
       "imageUrl": "https://picsum.photos/seed/image-recognition/500/300",
       "imageHint": "brain technology"
+    },
+    {
+      "id": "achievement-1",
+      "description": "Software Engineering Job Simulation Certificate",
+      "imageUrl": "https://picsum.photos/seed/cert1/600/400",
+      "imageHint": "certificate software"
+    },
+    {
+      "id": "achievement-2",
+      "description": "GenAI Powered Data Analytics Job Simulation Certificate",
+      "imageUrl": "https://picsum.photos/seed/cert2/600/400",
+      "imageHint": "certificate analytics"
+    },
+    {
+      "id": "achievement-3",
+      "description": "GenAI Job Simulation Certificate",
+      "imageUrl": "https://picsum.photos/seed/cert3/600/400",
+      "imageHint": "certificate generative ai"
+    },
+    {
+      "id": "achievement-4",
+      "description": "Data Analytics Job Simulation Certificate",
+      "imageUrl": "https://picsum.photos/seed/cert4/600/400",
+      "imageHint": "certificate data"
     }
   ]
 }
