@@ -1,84 +1,29 @@
-"use client";
-
-import Image from 'next/image';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent } from '@/components/ui/card';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-
-const skills = [
-  "HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Express", "MongoDB", "Firebase"
-];
-
-const experience = [
-  { role: "Full Stack Developer", company: "Tech Solutions Inc.", duration: "2021 - Present" },
-  { role: "Frontend Developer", company: "Web Wizards LLC", duration: "2019 - 2021" },
-];
-
-const education = [
-  { degree: "Bachelor of Technology in Computer Science", university: "University of Engineering", duration: "2015 - 2019" },
-];
-
 export default function About() {
-  const aboutImage = PlaceHolderImages.find(p => p.id === 'about-profile');
-
   return (
     <section id="about" className="bg-white/30 backdrop-blur-sm py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">About Me</h2>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="relative flex justify-center">
-            {aboutImage && (
-              <Card className="overflow-hidden shadow-2xl rounded-none">
-                <Image
-                  src={aboutImage.imageUrl}
-                  alt={aboutImage.description}
-                  width={400}
-                  height={500}
-                  className="object-cover w-full h-full"
-                  data-ai-hint={aboutImage.imageHint}
-                />
-              </Card>
-            )}
-          </div>
-          <div className="space-y-6">
-            <p className="text-lg text-muted-foreground">
-              I am a dedicated and results-driven Full Stack Developer with a passion for building innovative and efficient web applications. With a strong foundation in both front-end and back-end technologies, I enjoy tackling complex challenges and delivering high-quality solutions.
-            </p>
-            <Tabs defaultValue="skills" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="skills">Skills</TabsTrigger>
-                <TabsTrigger value="experience">Experience</TabsTrigger>
-                <TabsTrigger value="education">Education</TabsTrigger>
-              </TabsList>
-              <TabsContent value="skills" className="mt-6">
-                <div className="flex flex-wrap gap-3">
-                  {skills.map(skill => (
-                    <div key={skill} className="bg-background px-4 py-2 rounded-none text-sm font-medium shadow-sm">{skill}</div>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="experience" className="mt-6 space-y-4">
-                {experience.map(exp => (
-                  <Card key={exp.company} className="rounded-none">
-                    <CardContent className="p-4">
-                      <h3 className="font-bold text-lg">{exp.role}</h3>
-                      <p className="text-muted-foreground">{exp.company} | {exp.duration}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
-              <TabsContent value="education" className="mt-6 space-y-4">
-                {education.map(edu => (
-                  <Card key={edu.university} className="rounded-none">
-                    <CardContent className="p-4">
-                      <h3 className="font-bold text-lg">{edu.degree}</h3>
-                      <p className="text-muted-foreground">{edu.university} | {edu.duration}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
-            </Tabs>
-          </div>
+        <div className="bg-background/50 backdrop-blur-lg p-8 md:p-12 shadow-2xl rounded-3xl max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-8">
+            ABOUT ME
+          </h2>
+          <p className="text-center text-base md:text-lg text-foreground/80 font-bold uppercase tracking-wider leading-relaxed">
+            I AM A PASSIONATE AND DRIVEN COMPUTER SCIENCE STUDENT WITH A DEEP
+            SPECIALIZATION IN ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING. MY
+            JOURNEY INTO TECH IS FUELED BY A RELENTLESS CURIOSITY FOR BUILDING
+            INTELLIGENT SYSTEMS THAT CAN SOLVE TANGIBLE, REAL-WORLD PROBLEMS. I
+            THRIVE ON CHALLENGES, VIEWING EVERY OBSTACLE AS AN OPPORTUNITY TO
+            LEARN, INNOVATE, AND GROW AS A DEVELOPER AND A PROBLEM-SOLVER. FROM
+            THE THEORETICAL FOUNDATIONS OF COMPLEX ALGORITHMS TO HANDS-ON
+            PROJECTS INVOLVING NEURAL NETWORKS AND LARGE LANGUAGE MODELS, I AM
+            CONSTANTLY EXPLORING THE VAST AND EXCITING LANDSCAPE OF TECHNOLOGY.
+            I FIND IMMENSE SATISFACTION IN BRIDGING THE GAP BETWEEN ABSTRACT AI
+            CONCEPTS AND PRACTICAL, USER-FRIENDLY APPLICATIONS. MY ULTIMATE
+            GOAL IS TO CONTRIBUTE TO INNOVATIVE PROJECTS THAT PUSH THE
+            BOUNDARIES OF WHAT'S POSSIBLE AND MAKE A MEANINGFUL, POSITIVE
+            IMPACT ON SOCIETY. I'M ALWAYS EAGER TO LEARN AND APPLY NEW
+            TECHNIQUES TO MY WORK, AND I'M EXCITED ABOUT WHAT THE FUTURE
+            HOLDS.
+          </p>
         </div>
       </div>
     </section>
