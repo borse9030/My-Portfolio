@@ -62,7 +62,7 @@ export default function Projects() {
               className={`rounded-full px-6 py-2 text-sm font-bold transition-all duration-300 ${
                 activeFilter === filter
                   ? 'bg-primary text-primary-foreground shadow-lg'
-                  : 'bg-card/40 text-foreground/70 border-border/50 hover:bg-card/80'
+                  : 'bg-white/10 text-foreground/70 border-border/50 hover:bg-white/20'
               }`}
             >
               {filter}
@@ -73,7 +73,7 @@ export default function Projects() {
           {filteredProjects.map((project) => {
             const image = projectImages.find(img => img.id === project.id);
             return (
-              <Card key={project.id} className="bg-card/40 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+              <Card key={project.id} className="bg-white/10 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="relative mb-4 h-48 w-full">
                     {image && (
@@ -90,7 +90,7 @@ export default function Projects() {
                   <p className="text-foreground/80 font-bold mb-4 h-24">{project.description}</p>
                   <div className="flex flex-wrap justify-center gap-2 mb-6">
                     {project.tags.map(tag => (
-                      <Badge key={tag} variant="secondary" className="bg-gray-200/80 text-black rounded-full px-3 py-1 text-xs font-semibold">
+                      <Badge key={tag} variant="secondary" className="bg-white/20 text-black rounded-full px-3 py-1 text-xs font-semibold">
                         {tag}
                       </Badge>
                     ))}

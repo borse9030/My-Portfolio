@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import SafeClient from './safe-client';
 
 const achievements = [
   {
@@ -38,7 +39,7 @@ export default function Achievements() {
           {achievements.map((achievement) => {
             const image = achievementImages.find(img => img.id === achievement.id);
             return (
-              <Card key={achievement.id} className="bg-card/40 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden">
+              <Card key={achievement.id} className="bg-white/10 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden">
                 <CardContent className="p-6 text-center">
                   <div className="relative mb-4 h-56 w-full border-4 border-white rounded-lg overflow-hidden">
                     {image && (
