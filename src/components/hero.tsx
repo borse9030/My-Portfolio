@@ -16,7 +16,7 @@ export default function Hero() {
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
           <div className="font-headline text-5xl md:text-6xl lg:text-7xl tracking-tighter text-black">
-            <h1 className="font-black">HI, I'M SOPAN PATIL</h1>
+            <h1 className="font-black">HI, I'M BHAVESH</h1>
             <h2 className="font-black">A <span className="text-primary-foreground bg-primary inline-block border-r-4 border-primary pr-1 animate-typing">DEVELOPER</span></h2>
           </div>
           <p className="text-lg text-black/80 max-w-lg font-bold">

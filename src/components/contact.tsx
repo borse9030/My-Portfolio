@@ -18,7 +18,7 @@ const formSchema = z.object({
 });
 
 const contactInfo = [
-    { icon: Mail, text: "sopanpatil@example.com", href: "mailto:sopanpatil@example.com" },
+    { icon: Mail, text: "bhavesh@example.com", href: "mailto:bhavesh@example.com" },
     { icon: Phone, text: "+1 (123) 456-7890", href: "tel:+11234567890" },
     { icon: MapPin, text: "Mumbai, India", href: "#" },
 ];

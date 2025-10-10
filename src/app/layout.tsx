@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Sopan Patil | Portfolio',
-  description: 'Portfolio of Sopan Patil, created with Firebase Studio',
+  title: 'Bhavesh | Portfolio',
+  description: 'Portfolio of Bhavesh, created with Firebase Studio',
 };
 
 export default function RootLayout({
