@@ -94,14 +94,6 @@ export default {
             height: '0',
           },
         },
-        typing: {
-          'from': { width: '0' },
-          'to': { width: '100%' }
-        },
-        blink: {
-          'from, to': { borderColor: 'transparent' },
-          '50%': { borderColor: 'hsl(var(--primary))' },
-        },
         'pulse-slow': {
           '50%': {
             opacity: '.5',
@@ -133,7 +125,6 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'pulse-slow': 'pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        typing: 'typing 2s steps(11, end), blink .75s step-end infinite',
         'slide-down': 'slide-down 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
         'slide-down-fast': 'slide-down-fast 0.3s ease-out forwards',
       },
