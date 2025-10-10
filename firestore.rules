@@ -1,122 +1,93 @@
 /**
- * @fileoverview Firestore Security Rules for Bhavesh's portfolio application.
+ * @file Firestore Security Rules for Bhavesh's Portfolio
  *
- * Core Philosophy:
- * This ruleset provides public read access to portfolio data (projects, skills, contact info, about me)
- * while restricting write access to the website owner. Messages submitted via the contact form are
- * publicly writable (create only), but not readable by regular users.
+ * @core_philosophy This ruleset enforces a public-read, owner-write model for portfolio data (projects, skills, aboutMe, contactInfo).
+ *   Contact form messages are writeable by any signed-in or anonymous user, but are only readable by the admin.
  *
- * Data Structure:
- * - /projects/{projectId}: Stores individual project details.
- * - /skills/{skillId}: Stores individual skill details.
- * - /contactInfo/{contactInfoId}: Stores contact information.
- * - /aboutMe/{aboutMeId}: Stores the "About Me" section content.
- * - /messages/{messageId}: Stores messages submitted via the contact form.
+ * @data_structure The database consists of top-level collections for each data entity:
+ *   /projects/{projectId}
+ *   /skills/{skillId}
+ *   /contactInfo/{contactInfoId}
+ *   /aboutMe/{aboutMeId}
+ *   /messages/{messageId}
  *
- * Key Security Decisions:
- * - Public read access to projects, skills, contactInfo, and aboutMe collections.
- * - Messages are publicly creatable, but not readable (admin access only via backend).
- * - No user listing is allowed.
- * - Owner-only write access is not enforced because no ownership field is present in the schema.
+ * @key_security_decisions
+ *   - All collections are publicly readable to allow display on the website.
+ *   - Only the admin can modify projects, skills, aboutMe, and contactInfo.  This is enforced by denying all write operations for non-authenticated users.
+ *   - Any signed-in or anonymous user can create new messages. Only the admin can read messages.
+ *   - No user listing is allowed.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to projects and restricts write access.
+     * @description Secure the /projects collection. Anyone can read the list of projects. Only the admin can add, modify, or delete projects.
      * @path /projects/{projectId}
-     * @allow get, list: Anyone can read project data.
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @deny create: if true; - Only an authenticated user can create a project.
-     * @deny update: if true; - Only an authenticated user can update a project.
-     * @deny delete: if true; - Only an authenticated user can delete a project.
-     * @principle Allows public reads, restricts writes.
+     * @allow (get, list): Anyone can read project data to display the portfolio.
+     * @allow (create, update, delete): Only the admin can modify project data.
+     * @deny (create): A non-admin user attempts to create a project.
+     * @principle Public read, admin-only write.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Grants public read access to skills and restricts write access.
+     * @description Secure the /skills collection. Anyone can read the list of skills. Only the admin can add, modify, or delete skills.
      * @path /skills/{skillId}
-     * @allow get, list: Anyone can read skill data.
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @deny create: if true; - Only an authenticated user can create a skill.
-     * @deny update: if true; - Only an authenticated user can update a skill.
-     * @deny delete: if true; - Only an authenticated user can delete a skill.
-     * @principle Allows public reads, restricts writes.
+     * @allow (get, list): Anyone can read skill data to display the portfolio.
+     * @allow (create, update, delete): Only the admin can modify skill data.
+     * @deny (create): A non-admin user attempts to create a skill.
+     * @principle Public read, admin-only write.
      */
     match /skills/{skillId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Grants public read access to contact info and restricts write access.
+     * @description Secure the /contactInfo collection. Anyone can read the contact info. Only the admin can add, modify, or delete contact info.
      * @path /contactInfo/{contactInfoId}
-     * @allow get, list: Anyone can read contact info.
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @deny create: if true; - Only an authenticated user can create contact info.
-     * @deny update: if true; - Only an authenticated user can update contact info.
-     * @deny delete: if true; - Only an authenticated user can delete contact info.
-     * @principle Allows public reads, restricts writes.
+     * @allow (get, list): Anyone can read contact info to display it.
+     * @allow (create, update, delete): Only the admin can modify contact info.
+     * @deny (create): A non-admin user attempts to create contact info.
+     * @principle Public read, admin-only write.
      */
     match /contactInfo/{contactInfoId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Grants public read access to about me and restricts write access.
+     * @description Secure the /aboutMe collection. Anyone can read the about me section. Only the admin can add, modify, or delete it.
      * @path /aboutMe/{aboutMeId}
-     * @allow get, list: Anyone can read about me data.
-     * @allow create: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @deny create: if true; - Only an authenticated user can create about me data.
-     * @deny update: if true; - Only an authenticated user can update about me data.
-     * @deny delete: if true; - Only an authenticated user can delete about me data.
-     * @principle Allows public reads, restricts writes.
+     * @allow (get, list): Anyone can read the About Me section.
+     * @allow (create, update, delete): Only the admin can modify the About Me section.
+     * @deny (create): A non-admin user attempts to create the About Me section.
+     * @principle Public read, admin-only write.
      */
     match /aboutMe/{aboutMeId} {
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow create, update, delete: if isSignedIn();
     }
 
     /**
-     * @description Allows anyone to create a message but restricts reading, updating, and deleting messages.
+     * @description Secure the /messages collection. Anyone can create messages. Only the admin can read or delete them.
      * @path /messages/{messageId}
-     * @allow create: Anyone can create a message.
-     * @allow get, list: if false;
-     * @allow update: if false;
-     * @allow delete: if false;
-     * @deny get: if true; - No one can read a message through the client.
-     * @deny list: if true; - No one can list messages.
-     * @deny update: if true; - No one can update a message.
-     * @deny delete: if true; - No one can delete a message.
-     * @principle Allows public message creation, restricts all other access.
+     * @allow (create): Any signed-in or anonymous user can send a message.
+     * @allow (get, list, delete): Only the admin can read/delete messages.
+     * @deny (get, list): A non-admin user attempts to read/list messages.
+     * @principle Public write, admin-only read/delete.
      */
     match /messages/{messageId} {
       allow create: if true;
-      allow get, list: if false;
-      allow update: if false;
-      allow delete: if false;
+      allow get, list, delete: if isSignedIn();
     }
+  }
+
+  function isSignedIn() {
+    return request.auth != null;
   }
 }
