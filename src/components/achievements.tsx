@@ -1,7 +1,10 @@
+
+"use client";
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import SafeClient from './safe-client';
 
 const achievements = [
   {
@@ -35,35 +38,69 @@ const achievements = [
 ];
 
 export default function Achievements() {
+  const [selectedImg, setSelectedImg] = useState<string | null>(null);
 
   return (
-    <section id="achievements" className="py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">
-          ACHIEVEMENTS & CERTIFICATES
-        </h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          {achievements.map((achievement) => {
-            return (
-              <Card key={achievement.id} className="bg-white/10 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden">
-                <CardContent className="p-6 text-center">
-                  <div className="relative mb-4 h-56 w-full border-4 border-white rounded-lg overflow-hidden">
-                    <Image
-                      src={achievement.imageUrl}
-                      alt={achievement.title}
-                      fill
-                      className="object-cover"
-                      data-ai-hint={achievement.imageHint}
-                    />
-                  </div>
-                  <h3 className="font-headline text-xl font-bold mb-2 uppercase">{achievement.title}</h3>
-                  <p className="text-foreground/80 font-bold text-sm">{achievement.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
+    <>
+      <section id="achievements" className="py-16 md:py-24">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">
+            ACHIEVEMENTS & CERTIFICATES
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {achievements.map((achievement) => (
+              <motion.div
+                key={achievement.id}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="h-full cursor-pointer"
+                onClick={() => setSelectedImg(achievement.imageUrl)}
+              >
+                <Card className="bg-white/10 backdrop-blur-md shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-3xl overflow-hidden h-full flex flex-col">
+                  <CardContent className="p-6 text-center flex flex-col flex-grow">
+                    <div className="relative mb-4 h-56 w-full rounded-lg overflow-hidden">
+                      <Image
+                        src={achievement.imageUrl}
+                        alt={achievement.title}
+                        fill
+                        className="object-contain"
+                        data-ai-hint={achievement.imageHint}
+                      />
+                    </div>
+                    <h3 className="font-headline text-xl font-bold mb-2 uppercase">{achievement.title}</h3>
+                    <p className="text-foreground/80 font-bold text-sm flex-grow">{achievement.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {selectedImg && (
+        <motion.div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImg(null)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="relative"
+            onClick={(e) => e.stopPropagation()} // Prevents modal from closing when clicking on the image
+          >
+            <Image
+              src={selectedImg}
+              alt="Full Certificate"
+              width={1200}
+              height={800}
+              className="max-w-[90vw] max-h-[90vh] w-auto h-auto rounded-xl border-4 border-white shadow-2xl"
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </>
   );
 }
