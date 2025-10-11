@@ -59,12 +59,6 @@
       "description": "Data Analytics Job Simulation Certificate",
       "imageUrl": "/UC-15b2a037-ea7f-488f-b7d4-bc5c879bf913.jpg",
       "imageHint": "certificate data"
-    },
-    {
-      "id": "achievement-6",
-      "description": "Advanced AI Job Simulation Certificate",
-      "imageUrl": "https://picsum.photos/seed/cert6/600/400",
-      "imageHint": "certificate ai"
     }
   ]
 }

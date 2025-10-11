@@ -31,13 +31,6 @@ const achievements = [
     description: 'Completed the Deloitte Data Analytics Job Simulation on Forage, gaining practical knowledge in data analysis and forensic technology applications.',
     imageUrl: '/UC-15b2a037-ea7f-488f-b7d4-bc5c879bf913.jpg',
     imageHint: 'certificate data'
-  },
-  {
-    id: 'achievement-6',
-    title: 'Advanced AI Job Simulation',
-    description: 'Mastered advanced AI concepts, including deep learning, neural networks, and developing complex AI-driven solutions.',
-    imageUrl: 'https://picsum.photos/seed/cert6/600/400',
-    imageHint: 'certificate ai'
   }
 ];
 
