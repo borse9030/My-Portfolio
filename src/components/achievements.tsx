@@ -57,7 +57,7 @@ export default function Achievements() {
                         src={image.imageUrl}
                         alt={achievement.title}
                         fill
-                        className="object-contain"
+                        className="object-cover"
                         data-ai-hint={image.imageHint}
                       />
                     )}
