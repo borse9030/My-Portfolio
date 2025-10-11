@@ -8,11 +8,6 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  devServer: {
-    allowedDevOrigins: [
-      'https://6000-firebase-studio-1760115729467.cluster-mwsteha33jfdowtvzffztbjcj6.cloudworkstations.dev',
-    ],
-  },
   images: {
     remotePatterns: [
       {
@@ -34,7 +29,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https,
         hostname: 'opengraph.githubassets.com',
         port: '',
         pathname: '/**',
