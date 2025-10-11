@@ -22,8 +22,8 @@ const formSchema = z.object({
 });
 
 const socialLinks = [
-    { icon: Code, href: 'https://github.com', 'aria-label': 'Code' },
-    { icon: Linkedin, href: 'https://linkedin.com', 'aria-label': 'LinkedIn' },
+    { icon: Code, href: 'https://github.com/borse9030', 'aria-label': 'Code' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/bhavesh-borse-49917b377?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app', 'aria-label': 'LinkedIn' },
 ];
 
 export default function Contact() {
