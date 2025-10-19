@@ -7,7 +7,6 @@ Welcome to **My-Portfolio** — a personal portfolio website built using Next.js
 ## 🚀 Live Demo
 
 Visit the live version here: [https://bhaveshfolio.netlify.app/](https://bhaveshfolio.netlify.app/)  
-_(Link taken from repository metadata)_
 
 ---
 
@@ -129,9 +128,7 @@ Feel free to reach out:
 
 Name: Bhavesh (or your name)
 
-Email: your.email@example.com
-
-LinkedIn / GitHub / Portfolio links
+Email: borsebhavesh689@gmail.com
 
 Thanks for checking out my portfolio. I hope you enjoy browsing it!
 
